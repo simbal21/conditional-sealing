@@ -1,0 +1,46 @@
+> **POINT-IN-TIME INTERNAL REVIEW — SUPERSEDED.** This is an internal adversarial review artifact, published for transparency. It is NOT an external/independent audit — the system was never externally audited. For the honest overall assessment see docs/audits/MATURITY-SCORECARD.md. Cealis was retired June 2026; the code is archived and unmaintained.
+
+# Spec-to-code conformance: v3-configurator vs configurator-pda-spec.md (S2-4)
+
+HEAD e87c108 (2026-06-02). Read-only audit. Rule-45 discipline: all verdicts from actual code at HEAD via grep/read.
+
+## Verdict: MINOR-DEVIATIONS
+
+The configurator package is a high-fidelity, well-structured implementation of S2-4 that mirrors the spec section-by-section. 417/417 tests pass. The core normative machinery — boundary cascade, 5-stage gate, 103-row class table, 7 cross-field rules, 20 crypto-invariants, 29-field pda_root, content-addressed template immutability, PDA evolution, trust-tier consistency — is present and correct at the unit level. Deviations are: (1) two known structural/security gaps in the emit pipeline (TS-API-F-05, F-08), still open at HEAD; (2) the entire S2-8 controlled-use profile (token_policy_config family, CF-CU rules, sub-class 6) is absent from code.
+
+## CONFORMANT areas (verified at HEAD)
+
+- **Boundary cascade (§3.1-§3.6):** `src/validate/boundary/cascade.ts` runs Test 1 → Test 1.5 → Test 2 → Test 3 in exact order, first-exit semantics. `test-1.ts`/`test-1-5.ts`/`test-2.ts`/`test-3.ts` enumerate the spec's example surfaces and return the correct categories (d/a/a/b-or-c). Test 1.5 carries a derivation_pointer. Conformant.
+- **5-stage gate ordering (§4.1):** `validatePDA` in `src/pda/emit.ts:156-190` runs Stage1→2→3→4 with short-circuit between 1-4 (later stage skipped if earlier produced failures), Stage 5 always computed. Stage 4 emits all CF failures together (no short-circuit) per dispatcher.ts. Conformant.
+- **Stage 2 crypto-invariant catalog (§4.3):** All 20 CIs (CI-01..CI-20) wired in `crypto-invariant/dispatcher.ts`; `CI_CHECKS` length asserted = 20; negative-case test mutates each invariant and confirms its canonical owner fires. Conformant.
+- **Stage 4 cross-field (§4.5):** All 7 V2 rules CF-01..CF-07 wired in `cross-field/dispatcher.ts`, dispatched without short-circuit. CF-05 genuinely reads submitted `legal_effect_expected`/`partner_ready`/`g4_phase`. Conformant for the 7 V2 rules.
+- **Per-surface class table (§5.2/§5.4):** `class-table/table.ts` aggregates rows 1-91 with decomposed children (14.1, 15.1, 56.1/56.2, 60.1/60.2, 62.1/62.2, 63.1/63.2, 64.1/64.2, 69.1/69.2, 77.1/77.2, 79.1/79.2, 87.1/87.2, 90.1/90.2). Constants: EXECUTABLE_ROW_COUNT=103, ROOT_FAMILY_ID_MAX=91, EXECUTABLE_INTEGER_ROOT_COUNT=81, CHILD_ROW_COUNT=22. `consistency-check.ts` runs all 12 CI-style checks. This EXACTLY matches the spec's pre-controlled-use surface (§5.4: "103 for the pre-controlled-use surface"). Conformant for the pre-controlled-use table.
+- **29-field pda_root (§5.6):** `types/pda-root.ts` defines 16 original + 13 D1 fields, `PDA_ROOT_FIELD_COUNT = 29`, field order documented as byte-exact against S2-1 §3.3 + M1/M2 differential test. Conformant. (Prior 28-field flag is resolved.)
+- **Content-addressed template immutability (§13.5):** `defaults/template-immutability.ts` content-addresses templates via sha256 of sorted-key canonical JSON; `assertTemplateBytesUnchanged` throws if bytes mutate under an existing template_id. `content-hash.ts` uses deterministic sorted-key serialization. Conformant.
+- **Governance sub-classes 1-5 (§6.1-§6.5):** `governance/sub-class-router.ts` routes addition/deprecation/emergency/constraint_adjustment/new_rule to sub-classes 1/2/3/4/5 with correct authorities. Conformant for the 5 original sub-classes.
+- **PDA evolution semantics (§10):** `pda/diff.ts` has frozen-at-commit FROZEN_PATHS, allowed/forbidden/registry_overlay change kinds, registry-deprecation overlay. Conformant.
+- **Trust-tier-to-oracle consistency (§11.3 / CF-06):** `trust-tier/oracle-tier-consistency.ts` enforces Tier A cannot reference B/C, Tier B cannot reference C without upgrade, Tier C requires bound acknowledgment. Conformant.
+
+## DEVIATIONS
+
+### D1 — TS-API-F-05: Stage 3 PDA validation is a structural no-op (HIGH)
+`src/pda/emit.ts` `validatePDA` (line 162) feeds Stage 3 from `adaptToStage3(submitted)` (lines 356-366) and `buildStage3Context(submitted)` (lines 327-354). BOTH ignore the `submitted` argument (underscore-prefixed `_submitted`) and synthesize surfaces purely from `CLASS_TABLE_ROWS`: every category-(b) surface value is hardcoded `allowed:${row.id}`, every (c) is `5`; the allow-lists/bounds are built to contain exactly those values. Result: Stage 3 (PDA+ allow-list / bounds / registry-liveness / template-active) ALWAYS passes regardless of partner input. The Stage 3 unit checkers (`stage3/allow-list-checker.ts` etc.) are CORRECT — they genuinely compare value vs allow-list — but they are never fed real partner field values through the pipeline. No partner-supplied PDA field flows into Stage 3. This is the §4.4 surface validation rendered inert at the orchestration layer. Spec §4.4 / §4.1. Confirmed unchanged from the May-14 remediation plan (rated HIGH, "Needs rewrite to validate against real registry-derived allow-lists, ~1-2 day fix"). Still open at HEAD.
+
+### D2 — TS-API-F-08: prepareSubmittedPda silently fills required fields; guard exists but is never called (MEDIUM)
+`prepareSubmittedPda` (`src/pda/emit.ts:239-325`) coerces missing partner-supplied fields into synthetic defaults: `partner_id → "partner_fixture"` (line 260), derived `pda_id`/`template_id` from seeds (lines 247-248), `retention_seconds → 31_536_000` (line 316), `trust_tier → "A"` (line 659), `g4_phase → 2` (line 290), etc. The fix helper `assertPartnerInputRequiredFields` + `PartnerInputMissingRequiredFieldsError` EXIST (lines 206-237) and check the 5 required fields, but grep confirms ZERO call-sites anywhere in src. Both API/CLI boundary entrypoints — `validatePDA` (line 157) reached from `cli/validate.ts` (raw JSON file) and `emitPDA` (line 90) reached from `cli/emit.ts` (raw JSON file) — call `prepareSubmittedPda` directly without the guard. A partner PDA missing `partner_id` is silently attributed to `"partner_fixture"` and emitted. Spec §4.2 (Stage 1 "required fields are present"). Confirmed unchanged from May-14 plan (MEDIUM; "Future partner-PDA-submit API endpoint MUST call the new helper"). Still open at HEAD. No test asserts the guard is wired.
+
+Secondary amplifier of D1/D2: `buildCrossFieldContext` (lines 368-417) also hardcodes several Stage-4 inputs (e.g. `eligible_challengers_reveal: ["subject","operator"]` line 386, `ceremony_resolver` auto-derived from trust_tier, `g4_phase` defaulted to 2). So even Stage-4 conjuncts that depend on those (CF-01 #2/#3) are pre-satisfied by defaults rather than partner input. Stage 4 is wired to `submitted` but `submitted` is itself a defaults-filled object — so the no-op partially propagates to Stage 4 via the same root cause as D2.
+
+### D3 — S2-8 controlled-use profile entirely absent from code (MEDIUM, scope gap)
+The spec extends the configurator with the controlled-use profile in many normative places, NONE of which are implemented:
+- Class-table rows 92-107.3 (`token_policy_config` family, +25 rows → 128 total per §5.4) — ABSENT. Code stops at row 91 (`ROOT_FAMILY_ID_MAX=91`, `EXECUTABLE_ROW_COUNT=103`). grep for `token_policy_config` in class-table = 0 hits.
+- Cross-field rules CF-CU-01..CF-CU-06 (§4.5) — ABSENT. Only CF-01..CF-07 exist; grep for `CF-CU`/`CF_CU` across src = 0 hits.
+- Governance sub-class 6 ControlledUseAccessPolicy (§6.5A, §6.6, §6.7-CER-06, §6.8) — ABSENT. `SubClass` type and `SUB_CLASS_VALUES` = `[1,2,3,4,5,"1/2","1/2/5","N/A"]`; no `6`. Router handles 5 operations, no controlled-use families.
+- `commit_version = 0x0303` (CI-CU-01 binding) — ABSENT. Code hardcodes `commit_version: 0x0302` (emit.ts:267); grep for `0x0303` across src = 0 hits.
+- The §5.4 CI check string in code reads "physical executable row count is 103" / "contiguous from 1 through 91" — i.e. the implementation intentionally tracks ONLY the pre-controlled-use surface.
+
+This is a scope/coverage gap rather than a wiring bug: the spec's controlled-use surface (S2-8 propagation, commit_version 0x0303 deployments) is not yet built in v3-configurator. Whether this is a deviation or deliberate phasing depends on whether controlled-use is expected to ship with this configurator package; the spec presents rows 92-107.3 and CF-CU-01..06 as NORMATIVE extensions of THIS spec (S2-4 §5.2 / §4.5), so the code is non-conformant to the spec-as-written. Spec §4.5 (CF-CU), §5.2 (rows 92-107.3), §5.4 (128-row active count), §6.5A (sub-class 6).
+
+## Notes
+- All 36 test files / 417 tests pass — but tests exercise the unit checkers (correct) and the synthetic pipeline (always-passes by construction). No test feeds a partner PDA with a non-allowed value through the real Stage-3 field paths, so the tests cannot catch D1/D2.
+- §0.1 spec status is DRAFTED 2026-05-05 + propagation amendments 2026-05-24; the controlled-use rows were added to S2-4 by the 2026-05-24 coordinated propagation. The code predates or did not pick up that propagation for the configurator package.

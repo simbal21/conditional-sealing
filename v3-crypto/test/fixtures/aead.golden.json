@@ -1,0 +1,10 @@
+{
+  "_meta": {
+    "comment": "LOCKED — Phase E seed"
+  },
+  "vector": {
+    "nonce": "0xf3b7383fd65002aab1aacdaf",
+    "ciphertext": "0x03ab588a50ab7e0e4f19a50ff70bec28f287f0b6ca9ca5ee5156cfda3534961a77bb36b4c91fb5fc5a7f7f3ef535b9aa1017b21c6f2fb6c028107852b2ce41",
+    "ciphertext_digest": "0xd9e8992bd68e16e16f86e722c3947b5ece7f12eec64ec6107ea0a108786ec5f3"
+  }
+}

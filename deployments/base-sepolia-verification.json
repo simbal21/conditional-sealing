@@ -1,0 +1,196 @@
+{
+  "_note": "Base Sepolia (chainId 84532). For each UUPS proxy in base-sepolia.json: the implementation address read from the EIP-1967 slot, and its Sourcify status. Checked 2026-09-30. Proxies themselves are not Sourcify-verified; look up the implementation address.",
+  "checkedAt": "2026-09-30",
+  "contracts": {
+    "attestationGate": {
+      "proxy": "0xa46d3D6F8c556DeAdDaf14b01aB532938fE29CF5",
+      "implementation": "0xcc0eb6e90b1bcfdcc167d1a354602647e5e6b728",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "challengeRegistry": {
+      "proxy": "0x5f20AB2A915d4E218E0f59041A8c22Fd9449358d",
+      "implementation": "0x44ed16355573bcddf7905ddfc2aa20bc99206b83",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "claimDSL": {
+      "proxy": "0xe8a6636188977b7d9C57421f674aC65a6c5Bac4B",
+      "implementation": "0x266793591407f80b007e856eb821eb57bb1190de",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "composedModule": {
+      "proxy": "0xA2de70246e1658A3751508A7a9a8Eb5DEBA29619",
+      "implementation": "0x78f6966e5e642f6896e6a6e9eddd6b70c8edcfc6",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "conditionEngine": {
+      "proxy": "0xb09a8300423CA3BD0E028bAB6A6245A248520D02",
+      "implementation": "0x89845eb7cb324d5291ba89840fb425f13fabbb8a",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "consentGateModule": {
+      "proxy": "0x8Ef2e4d7e7C20186c41400fa93481171abe973a9",
+      "implementation": "0x0914c1dbd38d8badef13e276ee2a935d60e4b252",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "deadManSwitchModule": {
+      "proxy": "0x224234E1C03FfF559F29D399e14F482dB3aCD4f9",
+      "implementation": "0x2c3d4763e7a48e4f06bbfab995669449f9706d30",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "disclosureRegistry": {
+      "proxy": "0x1bB4FD873d6332f4a676672dC62295cd1a91bDe0",
+      "implementation": "0x61d058dde49d7e52d621e0eb67bb8992b5e61edc",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "disclosureRevocationRegistry": {
+      "proxy": "0xCEdc7Da28Bc13Ed07399C194bF013AdFd0307DF5",
+      "implementation": "0x52bde0f35f8cbd8b4568e704fb2422496e162757",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "dslVersionRegistry": {
+      "proxy": "0xddB1876a71980197daB0d18858769A6d75af7ca7",
+      "implementation": "0x2498c0250e250ab4ae656bf97b08447c103439d8",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "emergencyGovernance": {
+      "proxy": "0x90D1BF05DB15EbBb97897828477e5b9b6948F837",
+      "implementation": "0xae49970827fd0189474f2fff1eda40ec3462cb6a",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "fsmInterpreter": {
+      "proxy": "0xA150Ab87404934A98120aFA46Ee9EE8b48F7303A",
+      "implementation": "0x3401e7e66c6c404b5ca9d1224872dd562af5b562",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "g4AuthorityRegistry": {
+      "proxy": "0xD8115ddd86B8539FE8eFd0bb9fA2c42B5BD1287a",
+      "implementation": "0x4ec6b32e3931549a82f28ebb2d91cd8fd305c397",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "g4RefusalRegistry": {
+      "proxy": "0x98FD4b7cE8A91679340D9f440c152a0F1B43C7aE",
+      "implementation": "0x83e839dea38f473c8d6d7081fc4f8204647c1086",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "gateRecipientPubkeyRegistry": {
+      "proxy": "0x1afF2289E92f51d8435b22B0690da8aF2c9b2036",
+      "implementation": "0x32dd0b202a4b88ae2b3711fbbf92ea1c2858b7bd",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "heartbeatMissedModule": {
+      "proxy": "0xC6028d12419773EFA3473638397a98E358d6415f",
+      "implementation": "0xeba07cd29b4e3ffdfd71ddbe1936d3aba32948a5",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "identifierHelpers": {
+      "address": "0x0231D926B3e9356b2A6bFDeCFcC88b409dE2aC58",
+      "sourcify": "exact_match",
+      "note": "deployed directly (no proxy)"
+    },
+    "litV3Assignment": {
+      "proxy": "0x03Fd3E73a97A9A3C5EC98E2F03adE6Cb6edd697f",
+      "implementation": "0xb9e46585ad9ea4db50010d87815b5d80798ad31a",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "multiPartySignalModule": {
+      "proxy": "0x66C554B829e0775283ECb3C10813f2BC0bd2EAF7",
+      "implementation": "0x9107a2f930f8c164f1e1f68c7f92d0bbda8b8c1d",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "oracleAttestationModule": {
+      "proxy": "0xf413c8f8dA07Cf339310C4aa702e7CCc7bF8597b",
+      "implementation": "0x3e3ccdab6e2bd3279f8508b948e796342302bbe7",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "oracleRegistry": {
+      "proxy": "0xD57B875efef5EACBB6Aa2344B8995f7a00130675",
+      "implementation": "0x253c2c353439c10d0640742dc57e0fbc54e0a79b",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "oracleSchemaRegistry": {
+      "proxy": "0xB7B27027Ff64f6B5B9d5c99831b500aC9946ac13",
+      "implementation": "0x30f600597816635d1b0f0d9575ce397fd0d07782",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "passkeyRotationLog": {
+      "proxy": "0x47C7624d8ADadDA45cb8a1284a9C840F9f655f6d",
+      "implementation": "0xd34c13097ba98932221c91c1b24ba1b2708eb087",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "paymentObligationModule": {
+      "proxy": "0x459ee632Dce458ab268Bf6Fa289E2751F212313C",
+      "implementation": "0x1024ef5da893010ed852cca2734a74733fe059c1",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "pluginHashRegistry": {
+      "proxy": "0xeB6Ed72bE245d0d11523a925328d8C857031B2c3",
+      "implementation": "0xfd800f65dc4be279f97572dd198687615963de17",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "qtspRegistry": {
+      "proxy": "0x079d3Bdd69B01e04aa3D0A9D66226F066a04a441",
+      "implementation": "0x1a1eadbd7c83bf1b560beacb94c207159140b03a",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "securityMultisig": {
+      "proxy": "0x22f559fD5357d2E0E67Aa62460BBD2027C8fc259",
+      "implementation": "0x99448724332a847204adb7dace1aabda147079f4",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "shredRegistry": {
+      "proxy": "0x09397f2b69a4fE8Cc135E73b09eC8ADeb0BE3d9f",
+      "implementation": "0x619e10bac6b743d2c93046c87b1f9667a6787f60",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "subjectInitiatedModule": {
+      "proxy": "0x10319388175ce112ce1759485e08d35Ff5eD6E2C",
+      "implementation": "0x56adabe8b190dfcf531d9e861149e5cb89b78620",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "supersededCommitRegistry": {
+      "proxy": "0xfFa48644e47d526735C6da798698bb0D64Dd72C4",
+      "implementation": "0x0dcbf49ecd0a11c1d0ff0566fd8bda9bbe8162f9",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "timeLockModule": {
+      "proxy": "0xa02F0D095e06f47642a94691e83bcecF3e277258",
+      "implementation": "0xdfb8f9a6ffbc6afacd950e1635f8323c95fedc86",
+      "implementationSourcify": "exact_match",
+      "proxySourcify": "not verified"
+    },
+    "timelock": {
+      "address": "0x7b60022D7c87ca8f4323B51623109F639A3829FA",
+      "sourcify": "exact_match",
+      "note": "deployed directly (no proxy)"
+    }
+  }
+}

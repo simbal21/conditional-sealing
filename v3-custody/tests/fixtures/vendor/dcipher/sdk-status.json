@@ -1,0 +1,5 @@
+{
+  "status": "deferred",
+  "reason": "Randamu dcipher SDK package/version, registry endpoint, vendor signature/source archive hash, and sigma vector are not pinnable in this workspace; drand-only build ships and dcipher-committed PDAs return CUSTODY_ERR_DCIPHER_SDK_NOT_PINNED without fallback.",
+  "expectedPackage": "@randamu/dcipher-sdk"
+}

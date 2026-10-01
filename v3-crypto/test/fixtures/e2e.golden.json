@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "comment": "LOCKED — Phase E seed"
+  },
+  "cases": [
+    {
+      "profile": "FIXED_ONLY",
+      "encoded_digest": "0x52aded6e685be08a41f2cc8dcadfdc79a154180d4e5b8be4a6a6c7955e1d3baf",
+      "payload_ciphertext_digest": "0xdc88663f5899f0863b3e4df36aaf750e42bda2a808e49ba207967688684ccf8f"
+    },
+    {
+      "profile": "RECIPIENT_1_OF_1",
+      "encoded_digest": "0x45086f284b923d62662c05cea960492b2dee4a3d3f96f3fd795e50329893df23",
+      "payload_ciphertext_digest": "0xe44dd6e91b83e21f743d490871d9c38814a5fe2c65a73c7f39ef85944bc2e264"
+    },
+    {
+      "profile": "RECIPIENT_K_OF_N",
+      "encoded_digest": "0x022e1aa8c4def3b2bfd48db5daa4a51a65a37e0dc94026db11012526ebbfa446",
+      "payload_ciphertext_digest": "0xbc901cdb2099b733a61ef6a52f27e3f8dd2eb8ac845db8f5f318efa10bc71457"
+    }
+  ],
+  "rekey": {
+    "encoded_digest": "0x26f28714562b7070c5ac3b8a696bb1054ad44f33b339d6b40aeb0c9bae2fb93e"
+  }
+}

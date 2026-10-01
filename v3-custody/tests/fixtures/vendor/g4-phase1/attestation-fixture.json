@@ -1,0 +1,5 @@
+{
+  "phase": 1,
+  "attestation": "sealed-code-binary-hash",
+  "note": "Phase D placeholder fixture for G4AuthorityRegistry binaryHashOrMeasurement."
+}

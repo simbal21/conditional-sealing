@@ -1,0 +1,10 @@
+node_modules
+dist
+coverage
+.coverage
+out
+cache
+broadcast
+*.log
+setup/*/zkey.zkey
+setup/*/*.ptau

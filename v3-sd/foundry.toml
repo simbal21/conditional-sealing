@@ -1,0 +1,29 @@
+# Foundry config for v3-sd PLONK verifier contracts.
+# via_ir=true + optimizer_runs=1 per PHASE-PLAN §0 item #5 (EIP-170 mitigation
+# layer 1 for auto-generated snarkjs verifier_solidity output).
+[profile.default]
+src = "contracts"
+out = "out"
+libs = ["../contracts/lib"]
+test = "contracts/__tests__"
+script = "script"
+solc_version = "0.8.28"
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 1
+via_ir = true
+fs_permissions = [
+    { access = "read", path = "./" },
+    { access = "read", path = "../contracts/" },
+]
+
+[profile.default.fmt]
+line_length = 120
+tab_width = 4
+bracket_spacing = true
+int_types = "long"
+
+remappings = [
+    "@openzeppelin/contracts/=../contracts/lib/openzeppelin-contracts/contracts/",
+    "forge-std/=../contracts/lib/forge-std/src/",
+]

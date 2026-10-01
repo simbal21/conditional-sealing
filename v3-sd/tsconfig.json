@@ -1,0 +1,22 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": false
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests",
+    "sdk",
+    "circuits",
+    "setup",
+    "contracts",
+    "scripts",
+    "test-vectors",
+    "src/**/__tests__/**",
+    "src/**/*.test.ts"
+  ]
+}

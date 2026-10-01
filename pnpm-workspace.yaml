@@ -1,0 +1,10 @@
+packages:
+  - "v3-crypto"
+  - "v3-custody"
+  - "v3-configurator"
+  - "v3-api"
+  - "v3-sd"
+  - "v3-sd/sdk"
+  - "v3-ops"
+  - "verify-sdk"
+  - "v3-demo"

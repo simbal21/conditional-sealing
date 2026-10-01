@@ -1,0 +1,1186 @@
+openapi: 3.1.0
+info:
+  title: Cealis S2-5 Ingestion and Delivery API
+  version: 1.0-draft
+servers:
+  - url: https://api.cealis.local/v1
+security:
+  - PartnerHmacKeyId: []
+    PartnerHmacTimestamp: []
+    PartnerHmacNonce: []
+    PartnerHmacSignature: []
+  - SubjectBearer: []
+paths:
+  /g4/attestation:
+    get:
+      operationId: getG4EndpointAttestation
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+        - SubjectBearer: []
+      parameters:
+        - $ref: '#/components/parameters/CealisApiVersion'
+        - name: pda_id
+          in: query
+          required: true
+          schema: { type: string, format: uuid }
+        - name: authorizationIdCandidate
+          in: query
+          required: true
+          schema: { $ref: '#/components/schemas/Hex32' }
+        - name: preflight_context_digest
+          in: query
+          required: true
+          schema: { $ref: '#/components/schemas/Hex32' }
+        - name: commit_block_number
+          in: query
+          required: true
+          schema: { type: integer, minimum: 0 }
+        - name: commit_block_hash
+          in: query
+          required: true
+          schema: { $ref: '#/components/schemas/Hex32' }
+      responses:
+        '200': { description: attestation object, content: { application/json: { schema: { $ref: '#/components/schemas/G4EndpointAttestationResponse' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /ingestions:
+    post:
+      operationId: createModeAIngestion
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+        - SubjectBearer: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/CealisApiVersion'
+        - $ref: '#/components/parameters/ClientAttestationDigest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ModeAIngestionRequest' }
+          multipart/form-data:
+            schema: { $ref: '#/components/schemas/ModeAMultipartIngestionRequest' }
+      responses:
+        '201': { description: commit created, content: { application/json: { schema: { $ref: '#/components/schemas/ModeAIngestionResponse' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /ingestions/{h_commit}:
+    get:
+      operationId: getIngestionStatus
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+        - SubjectBearer: []
+      parameters:
+        - $ref: '#/components/parameters/HCommitPath'
+      responses:
+        '200': { description: ingestion status, content: { application/json: { schema: { $ref: '#/components/schemas/EscrowStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /reveals/{authorizationId}:
+    get:
+      operationId: getRevealStatus
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+        - SubjectBearer: []
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationIdPath'
+      responses:
+        '200': { description: reveal status, content: { application/json: { schema: { $ref: '#/components/schemas/RevealStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /reveals/{authorizationId}/delivery-manifest:
+    get:
+      operationId: getCombinerManifest
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+        - SubjectBearer: []
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationIdPath'
+      responses:
+        '200': { description: combiner manifest, content: { application/json: { schema: { $ref: '#/components/schemas/CombinerManifest' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /reveals/{authorizationId}/artifact-bundles/{recipient_ref}:
+    get:
+      operationId: getRevealArtifactBundle
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+        - SubjectBearer: []
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationIdPath'
+        - name: recipient_ref
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: artifact bundle, content: { application/json: { schema: { $ref: '#/components/schemas/RevealArtifactBundle' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /partners/me/pdas:
+    get:
+      operationId: listPartnerPdas
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+      responses:
+        '200':
+          description: PDA list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [pdas]
+                properties:
+                  pdas: { type: array, items: { $ref: '#/components/schemas/PdaInspection' } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /partners/me/pdas/{pda_id}:
+    get:
+      operationId: getPartnerPda
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+      parameters:
+        - name: pda_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: PDA inspection, content: { application/json: { schema: { $ref: '#/components/schemas/PdaInspection' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /partners/me/onboarding-links:
+    post:
+      operationId: createOnboardingLink
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OnboardingLinkRequest' }
+      responses:
+        '201': { description: onboarding link, content: { application/json: { schema: { $ref: '#/components/schemas/OnboardingLinkResponse' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /partners/me/escrows/{h_commit}:
+    get:
+      operationId: getPartnerEscrowStatus
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+      parameters: [{ $ref: '#/components/parameters/HCommitPath' }]
+      responses:
+        '200': { description: escrow status, content: { application/json: { schema: { $ref: '#/components/schemas/EscrowStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /partners/me/escrows/{h_commit}/shred-requests:
+    post:
+      operationId: createPartnerShredRequest
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+      parameters:
+        - $ref: '#/components/parameters/HCommitPath'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ShredRequest' }
+      responses:
+        '202': { description: shred accepted, content: { application/json: { schema: { $ref: '#/components/schemas/ShredStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /partners/me/reveals/{authorizationId}:
+    get:
+      operationId: getPartnerRevealStatus
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+      parameters: [{ $ref: '#/components/parameters/AuthorizationIdPath' }]
+      responses:
+        '200': { description: reveal status, content: { application/json: { schema: { $ref: '#/components/schemas/RevealStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /partners/me/obligations/{obligationId}:
+    get:
+      operationId: getPartnerObligationStatus
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+      parameters:
+        - $ref: '#/components/parameters/ObligationIdPath'
+      responses:
+        '200': { description: obligation status, content: { application/json: { schema: { $ref: '#/components/schemas/ObligationStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /partners/me/shreds/{h_commit}:
+    get:
+      operationId: getPartnerShredStatus
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+      parameters: [{ $ref: '#/components/parameters/HCommitPath' }]
+      responses:
+        '200': { description: shred status, content: { application/json: { schema: { $ref: '#/components/schemas/ShredStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/webauthn/challenge:
+    post:
+      operationId: createSubjectWebAuthnChallenge
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [purpose]
+              properties:
+                purpose: { type: string, enum: [login, sigma_subject, shred_request] }
+      responses:
+        '200': { description: challenge, content: { application/json: { schema: { type: object, required: [challenge], properties: { challenge: { type: string } } } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/webauthn/verify:
+    post:
+      operationId: verifySubjectWebAuthn
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, required: [challenge_id, assertion], properties: { challenge_id: { type: string }, assertion: { type: object } } }
+      responses:
+        '200': { description: session, content: { application/json: { schema: { $ref: '#/components/schemas/SubjectSession' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/sessions/revoke:
+    post:
+      operationId: revokeSubjectSession
+      security: [{ SubjectBearer: [] }]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SubjectSessionRevokeRequest' }
+      responses:
+        '200': { description: subject session revoked, content: { application/json: { schema: { $ref: '#/components/schemas/SubjectSessionRevokeResponse' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/me/escrows:
+    get:
+      operationId: listSubjectEscrows
+      security: [{ SubjectBearer: [] }]
+      responses:
+        '200': { description: subject escrows, content: { application/json: { schema: { $ref: '#/components/schemas/SubjectEscrowList' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/me/escrows/{h_commit}:
+    get:
+      operationId: getSubjectEscrowStatus
+      security: [{ SubjectBearer: [] }]
+      parameters:
+        - $ref: '#/components/parameters/HCommitPath'
+      responses:
+        '200': { description: subject escrow status, content: { application/json: { schema: { $ref: '#/components/schemas/EscrowStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/me/escrows/{h_commit}/vault-blob:
+    get:
+      operationId: getSubjectVaultBlob
+      security: [{ SubjectBearer: [] }]
+      parameters: [{ $ref: '#/components/parameters/HCommitPath' }]
+      responses:
+        '200': { description: vault blob, content: { application/json: { schema: { $ref: '#/components/schemas/VaultBlobResponse' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/me/audit-log:
+    get:
+      operationId: exportSubjectAuditLog
+      security: [{ SubjectBearer: [] }]
+      responses:
+        '200': { description: audit log, content: { application/json: { schema: { $ref: '#/components/schemas/AuditLogExport' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/me/retention:
+    get:
+      operationId: getSubjectRetention
+      security: [{ SubjectBearer: [] }]
+      responses:
+        '200': { description: retention, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/RetentionStatus' } } } } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /subjects/me/escrows/{h_commit}/shred-requests:
+    post:
+      operationId: createSubjectShredRequest
+      security: [{ SubjectBearer: [] }]
+      parameters:
+        - $ref: '#/components/parameters/HCommitPath'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ShredRequest' }
+      responses:
+        '202': { description: shred accepted, content: { application/json: { schema: { $ref: '#/components/schemas/ShredStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /onboarding/{token}/pre-sigma-payload:
+    get:
+      operationId: getPreSigmaPayload
+      security: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: pre sigma payload, content: { application/json: { schema: { $ref: '#/components/schemas/PreSigmaPayload' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /onboarding/{token}/pre-sigma-confirmations:
+    post:
+      operationId: submitPreSigmaConfirmations
+      security: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PreSigmaConfirmationRequest' }
+      responses:
+        '200': { description: accepted, content: { application/json: { schema: { type: object, required: [pre_sigma_session_id], properties: { pre_sigma_session_id: { type: string } } } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /vault/retention/{h_commit}:
+    get:
+      operationId: getVaultRetention
+      security:
+        - PartnerHmacKeyId: []
+          PartnerHmacTimestamp: []
+          PartnerHmacNonce: []
+          PartnerHmacSignature: []
+        - SubjectBearer: []
+      parameters: [{ $ref: '#/components/parameters/HCommitPath' }]
+      responses:
+        '200': { description: retention status, content: { application/json: { schema: { $ref: '#/components/schemas/RetentionStatus' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /verify/artifact-bundles:
+    post:
+      operationId: verifyArtifactBundle
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/VerifyArtifactRequest' }
+      responses:
+        '200': { description: verification result, content: { application/json: { schema: { $ref: '#/components/schemas/VerifyArtifactResponse' } } } }
+        default: { $ref: '#/components/responses/ProblemResponse' }
+  /verification/networks:
+    get:
+      operationId: getVerificationNetworks
+      security: []
+      responses:
+        '200': { description: network manifest, content: { application/json: { schema: { type: object, required: [networks], properties: { networks: { type: array, items: { $ref: '#/components/schemas/NetworkVerificationManifest' } } } } } } }
+  /verification/sdk-versions:
+    get:
+      operationId: getSdkVersions
+      security: []
+      responses:
+        '200': { description: SDK versions, content: { application/json: { schema: { $ref: '#/components/schemas/SdkVersionManifest' } } } }
+components:
+  securitySchemes:
+    PartnerHmacKeyId:
+      type: apiKey
+      in: header
+      name: X-Cealis-Key-Id
+      description: Opaque partner key id used for signing-secret lookup and scope enforcement.
+    PartnerHmacTimestamp:
+      type: apiKey
+      in: header
+      name: X-Cealis-Timestamp
+      description: Unix seconds bound into canonical_request; requests older than 300 seconds fail.
+    PartnerHmacNonce:
+      type: apiKey
+      in: header
+      name: X-Cealis-Nonce
+      description: 128-bit base64url nonce bound into canonical_request; no repeats within 24h per key id.
+    PartnerHmacSignature:
+      type: apiKey
+      in: header
+      name: X-Cealis-Signature
+      description: sha256=<hex HMAC-SHA256(signing_secret, canonical_request)>.
+    SubjectBearer:
+      type: http
+      scheme: bearer
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, minLength: 8, maxLength: 200 }
+    CealisApiVersion:
+      name: Cealis-Api-Version
+      in: header
+      required: false
+      schema: { type: string }
+    ClientAttestationDigest:
+      name: X-Cealis-Client-Attestation-Digest
+      in: header
+      required: true
+      schema: { $ref: '#/components/schemas/Hex32' }
+    HCommitPath:
+      name: h_commit
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/Hex32' }
+    AuthorizationIdPath:
+      name: authorizationId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/Hex32' }
+    ObligationIdPath:
+      name: obligationId
+      in: path
+      required: true
+      schema: { $ref: '#/components/schemas/Hex32' }
+  responses:
+    ProblemResponse:
+      description: problem
+      content:
+        application/problem+json:
+          schema: { $ref: '#/components/schemas/Problem' }
+  schemas:
+    Hex32:
+      type: string
+      pattern: '^0x[a-fA-F0-9]{64}$'
+    Hex:
+      type: string
+      pattern: '^0x[a-fA-F0-9]*$'
+    EvmAddress:
+      type: string
+      pattern: '^0x[a-fA-F0-9]{40}$'
+    Problem:
+      type: object
+      required: [type, title, status, code, category, correlation_id, retryable]
+      properties:
+        type: { type: string, format: uri }
+        title: { type: string }
+        status: { type: integer }
+        code: { type: string }
+        category: { type: string, enum: [REQUEST, AUTH, ATTESTATION, VAULT, CHAIN, COMBINER, SCHEMA, IDEMPOTENCY, RATE_LIMIT, TRANSPORT, GOVERNANCE, RETRY_EXHAUSTED] }
+        detail: { type: string }
+        correlation_id: { type: string }
+        retryable: { type: boolean }
+        safe_refs: { type: object, additionalProperties: true }
+    PreflightCommitContext:
+      type: object
+      required: [authorizationIdCandidate, pda_id, pda_version, partner_id, schema_digest, payload_digest, payload_canonicalization, pda_root, g3_choice, g4_phase, commit_block_number, commit_block_hash]
+      properties:
+        authorizationIdCandidate: { $ref: '#/components/schemas/Hex32' }
+        pda_id: { type: string, format: uuid }
+        pda_version: { type: string }
+        partner_id: { type: string, format: uuid }
+        schema_digest: { $ref: '#/components/schemas/Hex32' }
+        payload_digest: { $ref: '#/components/schemas/Hex32' }
+        payload_canonicalization: { type: string, enum: [jcs_json, raw_binary, multipart_file_part] }
+        pda_root: { $ref: '#/components/schemas/Hex32' }
+        g3_choice: { type: string, enum: [dcipher, drand] }
+        g4_phase: { type: integer, enum: [1, 2] }
+        commit_block_number: { type: integer, minimum: 0 }
+        commit_block_hash: { $ref: '#/components/schemas/Hex32' }
+        block_source: { type: string }
+    RegistrySnapshotRef:
+      type: object
+      required: [registry_name, chain_id, registry_address, checked_block, checked_block_hash, entry_digest]
+      properties:
+        registry_name: { type: string }
+        chain_id: { type: integer }
+        registry_address: { $ref: '#/components/schemas/EvmAddress' }
+        checked_block: { type: integer, minimum: 0 }
+        checked_block_hash: { $ref: '#/components/schemas/Hex32' }
+        lookup_key: { type: string }
+        entry_digest: { $ref: '#/components/schemas/Hex32' }
+        proof_ref: { type: string }
+    VerificationCheckResult:
+      type: object
+      required: [status, checked_block, checked_block_hash]
+      properties:
+        status: { type: string, enum: [pass, fail] }
+        checked_block: { type: integer, minimum: 0 }
+        checked_block_hash: { $ref: '#/components/schemas/Hex32' }
+        code: { type: string }
+        safe_refs: { type: object, additionalProperties: true }
+    AttestationVerificationChecks:
+      type: object
+      required: [lit_assignment, lit_dcap, g3_pubkey, g4_authority]
+      properties:
+        lit_assignment: { $ref: '#/components/schemas/VerificationCheckResult' }
+        lit_dcap: { $ref: '#/components/schemas/VerificationCheckResult' }
+        g3_pubkey: { $ref: '#/components/schemas/VerificationCheckResult' }
+        g4_authority: { $ref: '#/components/schemas/VerificationCheckResult' }
+    LitAssignmentProof:
+      type: object
+      required: [authorizationId, assignment_digest, assigned_operator_id, registry_ref]
+      properties:
+        authorizationId: { $ref: '#/components/schemas/Hex32' }
+        assignment_digest: { $ref: '#/components/schemas/Hex32' }
+        assigned_operator_id: { type: string }
+        registry_ref: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        assignment_record_ref: { type: string }
+    LitDcapProof:
+      type: object
+      required: [quote_digest, bound_authorizationId, bound_preflight_context_digest, bound_block_hash, tee_vendor_family, measurement, registry_ref]
+      properties:
+        quote_digest: { $ref: '#/components/schemas/Hex32' }
+        bound_authorizationId: { $ref: '#/components/schemas/Hex32' }
+        bound_preflight_context_digest: { $ref: '#/components/schemas/Hex32' }
+        bound_block_hash: { $ref: '#/components/schemas/Hex32' }
+        tee_vendor_family: { type: string }
+        measurement: { type: string }
+        user_data_binding_digest: { $ref: '#/components/schemas/Hex32' }
+        registry_ref: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        quote_ref: { type: string }
+    G3PubkeyEvidence:
+      type: object
+      required: [network, pubkey_digest, registry_ref]
+      properties:
+        network: { type: string, enum: [dcipher, drand] }
+        pubkey_digest: { $ref: '#/components/schemas/Hex32' }
+        registry_ref: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        committee_id: { type: string }
+        pubkey_ref: { type: string }
+    G4AuthorityEvidence:
+      type: object
+      required: [phase, registry_ref]
+      properties:
+        phase: { type: integer, enum: [1, 2] }
+        registry_ref: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        phase1:
+          type: object
+          required: [binary_hash, effective_block, ed25519_signature, phase_trust_statement]
+          properties:
+            binary_hash: { $ref: '#/components/schemas/Hex32' }
+            effective_block: { type: integer, minimum: 0 }
+            ed25519_signature: { type: string }
+            phase_trust_statement: { type: string, const: phase_1_registered_binary }
+        phase2:
+          type: object
+          required: [quote_digest, measurement, user_data_binding_digest, zkdcap_verifier_ref]
+          properties:
+            quote_digest: { $ref: '#/components/schemas/Hex32' }
+            measurement: { type: string }
+            user_data_binding_digest: { $ref: '#/components/schemas/Hex32' }
+            zkdcap_verifier_ref: { type: string }
+    AttestationPreflight:
+      type: object
+      required: [digest, authorizationIdCandidate, preflight_context_digest, commit_block_number, commit_block_hash, registry_refs, lit_assignment, lit_dcap, g3_pubkey, g4_authority, verification_checks]
+      properties:
+        digest: { $ref: '#/components/schemas/Hex32' }
+        authorizationIdCandidate: { $ref: '#/components/schemas/Hex32' }
+        preflight_context_digest: { $ref: '#/components/schemas/Hex32' }
+        commit_block_number: { type: integer, minimum: 0 }
+        commit_block_hash: { $ref: '#/components/schemas/Hex32' }
+        registry_refs: { type: array, minItems: 3, items: { $ref: '#/components/schemas/RegistrySnapshotRef' } }
+        lit_assignment: { $ref: '#/components/schemas/LitAssignmentProof' }
+        lit_dcap: { $ref: '#/components/schemas/LitDcapProof' }
+        g3_pubkey: { $ref: '#/components/schemas/G3PubkeyEvidence' }
+        g4_authority: { $ref: '#/components/schemas/G4AuthorityEvidence' }
+        verification_checks: { $ref: '#/components/schemas/AttestationVerificationChecks' }
+    G4EndpointAttestationResponse:
+      type: object
+      required: [phase, pda_id, authorizationIdCandidate, preflight_context_digest, commit_block_number, commit_block_hash, attestation_digest, verification_checks, attestation_preflight]
+      properties:
+        phase: { type: integer, enum: [1, 2] }
+        pda_id: { type: string, format: uuid }
+        authorizationIdCandidate: { $ref: '#/components/schemas/Hex32' }
+        preflight_context_digest: { $ref: '#/components/schemas/Hex32' }
+        commit_block_number: { type: integer, minimum: 0 }
+        commit_block_hash: { $ref: '#/components/schemas/Hex32' }
+        attestation_digest: { $ref: '#/components/schemas/Hex32' }
+        phase1: { type: object, additionalProperties: true }
+        phase2: { type: object, additionalProperties: true }
+        verification_checks: { $ref: '#/components/schemas/AttestationVerificationChecks' }
+        attestation_preflight: { $ref: '#/components/schemas/AttestationPreflight' }
+    ModeAIngestionMetadata:
+      type: object
+      required: [pda_id, pda_version, partner_id, authorizationIdCandidate, preflight_commit_context, preflight_context_digest, schema_digest, payload_classification, attestation_preflight, client_attestation_digest]
+      properties:
+        pda_id: { type: string, format: uuid }
+        pda_version: { type: string }
+        partner_id: { type: string, format: uuid }
+        authorizationIdCandidate: { $ref: '#/components/schemas/Hex32' }
+        preflight_commit_context: { $ref: '#/components/schemas/PreflightCommitContext' }
+        preflight_context_digest: { $ref: '#/components/schemas/Hex32' }
+        subject_commitment_inputs: { type: object, additionalProperties: true }
+        sigma_subject: { $ref: '#/components/schemas/Hex' }
+        pre_sigma_session_id: { type: string }
+        schema_digest: { $ref: '#/components/schemas/Hex32' }
+        payload_classification: { type: object, additionalProperties: true }
+        attestation_preflight: { $ref: '#/components/schemas/AttestationPreflight' }
+        client_attestation_digest:
+          allOf: [{ $ref: '#/components/schemas/Hex32' }]
+          description: Must equal X-Cealis-Client-Attestation-Digest and attestation_preflight.digest.
+        conditional_recipient_confirmations: { type: array, items: { type: string } }
+    ModeAIngestionRequest:
+      type: object
+      required: [pda_id, pda_version, partner_id, authorizationIdCandidate, preflight_commit_context, preflight_context_digest, schema_digest, payload_classification, plaintext_payload, attestation_preflight, client_attestation_digest]
+      properties:
+        pda_id: { type: string, format: uuid }
+        pda_version: { type: string }
+        partner_id: { type: string, format: uuid }
+        authorizationIdCandidate: { $ref: '#/components/schemas/Hex32' }
+        preflight_commit_context: { $ref: '#/components/schemas/PreflightCommitContext' }
+        preflight_context_digest: { $ref: '#/components/schemas/Hex32' }
+        subject_commitment_inputs: { type: object, additionalProperties: true }
+        sigma_subject: { $ref: '#/components/schemas/Hex' }
+        pre_sigma_session_id: { type: string }
+        schema_digest: { $ref: '#/components/schemas/Hex32' }
+        payload_classification: { type: object, additionalProperties: true }
+        plaintext_payload: {}
+        attestation_preflight: { $ref: '#/components/schemas/AttestationPreflight' }
+        client_attestation_digest:
+          allOf: [{ $ref: '#/components/schemas/Hex32' }]
+          description: Must equal X-Cealis-Client-Attestation-Digest and attestation_preflight.digest.
+        conditional_recipient_confirmations: { type: array, items: { type: string } }
+    ModeAMultipartIngestionRequest:
+      type: object
+      required: [metadata, plaintext_payload]
+      properties:
+        metadata: { $ref: '#/components/schemas/ModeAIngestionMetadata' }
+        plaintext_payload: { type: string, format: binary }
+    ModeAIngestionResponse:
+      type: object
+      required: [api_version, commit_version, ingestion_id, authorizationId, h_commit, pda_id, pda_version, partner_id, vault_ref, status]
+      properties:
+        api_version: { type: string }
+        commit_version: { type: string, const: '0x0302' }
+        ingestion_id: { type: string }
+        authorizationId: { $ref: '#/components/schemas/Hex32' }
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        pda_id: { type: string, format: uuid }
+        pda_version: { type: string }
+        partner_id: { type: string, format: uuid }
+        vault_ref: { type: string }
+        commit_tx_hash: { type: string }
+        commit_block: { type: integer }
+        endpoint_attestation_digest: { $ref: '#/components/schemas/Hex32' }
+        g3_choice: { type: string, enum: [dcipher, drand] }
+        g4_phase: { type: integer, enum: [1, 2] }
+        retention_expires_at: { type: string, format: date-time }
+        sd_output: { $ref: '#/components/schemas/SdOutput' }
+        status: { type: string, enum: [committed, pending_chain_anchor, failed] }
+    SdOutput:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [complete, failed, partial_failure, skipped, not_configured] }
+        authorizationId: { $ref: '#/components/schemas/Hex32' }
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        sdMerkleRoot: { type: string }
+        cleartext: { type: array, items: { type: object, additionalProperties: true } }
+        claims: { type: array, items: { type: object, additionalProperties: true } }
+        failures: { type: array, items: { type: object, additionalProperties: true } }
+    CombinerManifest:
+      type: object
+      required: [authorizationId, h_commit, authorization_block, block_hash, pda_id, g3_choice, g4_phase, gate_endpoints, registry_snapshot_refs, recipient_policy, combiner_execution_context, delegation_allowed, recipient_control_requirement, tee_hsm_required, risk_statement_required, policy_evidence_refs]
+      properties:
+        authorizationId: { $ref: '#/components/schemas/Hex32' }
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        authorization_block: { type: integer }
+        block_hash: { $ref: '#/components/schemas/Hex32' }
+        pda_id: { type: string, format: uuid }
+        g3_choice: { type: string, enum: [dcipher, drand] }
+        g4_phase: { type: integer, enum: [1, 2] }
+        gate_endpoints: { type: object, additionalProperties: true }
+        registry_snapshot_refs: { type: object, additionalProperties: true }
+        recipient_policy: { type: object, additionalProperties: true }
+        combiner_execution_context: { type: string, enum: [audited_process_memory, recipient_controlled_tee, recipient_controlled_hsm, delegated_non_custodial_service, prohibited] }
+        delegation_allowed: { type: boolean }
+        recipient_control_requirement: { type: string, enum: [recipient_local, recipient_controlled_service, delegated_allowed, delegation_prohibited] }
+        tee_hsm_required: { type: boolean }
+        risk_statement_required: { type: boolean }
+        policy_evidence_refs: { type: array, items: { $ref: '#/components/schemas/PolicyEvidenceRef' } }
+    RevealArtifactBundle:
+      type: object
+      required: [bundle_version, canonicalization, authorization, pda, recipient, plaintext, issuer_attestation, provenance, sigma_block, chain_proofs, registry_snapshots, shred_state, sd_refs, verification, pii_statement]
+      properties:
+        bundle_version: { type: string }
+        canonicalization: { $ref: '#/components/schemas/Canonicalization' }
+        authorization: { $ref: '#/components/schemas/ArtifactAuthorization' }
+        pda: { $ref: '#/components/schemas/ArtifactPda' }
+        recipient: { $ref: '#/components/schemas/ArtifactRecipient' }
+        plaintext: { $ref: '#/components/schemas/ArtifactPlaintext' }
+        issuer_attestation: { $ref: '#/components/schemas/IssuerAttestationBlock' }
+        provenance: { $ref: '#/components/schemas/ProvenanceBlock' }
+        sigma_block: { $ref: '#/components/schemas/SigmaBlock' }
+        chain_proofs: { $ref: '#/components/schemas/ChainProofs' }
+        registry_snapshots: { $ref: '#/components/schemas/RegistrySnapshots' }
+        shred_state: { $ref: '#/components/schemas/ArtifactShredState' }
+        sd_refs: { $ref: '#/components/schemas/ArtifactSdRefs' }
+        verification: { $ref: '#/components/schemas/ArtifactVerification' }
+        pii_statement: { $ref: '#/components/schemas/PiiStatement' }
+    PdaInspection:
+      type: object
+      required: [pda_id, pda_version, pda_root, partner_id, ingestion_mode, g3_choice, g4_phase, trust_tier, operational_class]
+      properties:
+        pda_id: { type: string, format: uuid }
+        pda_version: { type: string }
+        pda_root: { $ref: '#/components/schemas/Hex32' }
+        partner_id: { type: string, format: uuid }
+        schema_digest: { $ref: '#/components/schemas/Hex32' }
+        ingestion_mode: { type: string, enum: [mode_a, mode_b_reserved] }
+        g3_choice: { type: string, enum: [dcipher, drand] }
+        g4_phase: { type: integer, enum: [1, 2] }
+        trust_tier: { type: string, enum: [tier_a, tier_b, tier_c] }
+        operational_class: { type: string, enum: [consumer, b2b_partner, regulated, legal_effect] }
+        recipients: { type: array, items: { type: object, additionalProperties: true } }
+        retention: { $ref: '#/components/schemas/RetentionStatus' }
+    OnboardingLinkRequest:
+      type: object
+      required: [pda_id, label]
+      properties:
+        pda_id: { type: string, format: uuid }
+        label: { type: string }
+        expires_at: { type: string, format: date-time }
+        max_uses: { type: integer, minimum: 1 }
+        redirect_url: { type: string, format: uri }
+    OnboardingLinkResponse:
+      type: object
+      required: [onboarding_link_id, url, pda_id, active]
+      properties:
+        onboarding_link_id: { type: string, format: uuid }
+        url: { type: string, format: uri }
+        token_expires_at: { type: string, format: date-time }
+        pda_id: { type: string, format: uuid }
+        pda_version: { type: string }
+        active: { type: boolean }
+    EscrowStatus:
+      type: object
+      required: [h_commit, status, pda_id, g4_phase]
+      properties:
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        status: { type: string }
+        pda_id: { type: string, format: uuid }
+        g4_phase: { type: integer, enum: [1, 2] }
+        vault_ref: { type: string }
+        retention_expires_at: { type: string, format: date-time }
+        sd_status: { type: string }
+    RevealStatus:
+      type: object
+      required: [authorizationId, h_commit, status, g4_phase]
+      properties:
+        authorizationId: { $ref: '#/components/schemas/Hex32' }
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        status: { type: string }
+        g4_phase: { type: integer, enum: [1, 2] }
+        challenge_window_expired_at: { type: string, format: date-time }
+        refusal: { type: object, additionalProperties: true }
+        sigma_block: { $ref: '#/components/schemas/SigmaBlock' }
+        artifact_bundles: { type: array, items: { type: object, additionalProperties: true } }
+    ObligationStatus:
+      type: object
+      required: [obligationId, status, pda_id]
+      properties:
+        obligationId: { $ref: '#/components/schemas/Hex32' }
+        authorizationId: { $ref: '#/components/schemas/Hex32' }
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        pda_id: { type: string, format: uuid }
+        status: { type: string, enum: [pending, active, paid, cured, default_observed, challenged, finalized, cancelled] }
+        due_at: { type: string, format: date-time }
+        conditionRef: { $ref: '#/components/schemas/Hex32' }
+    ShredStatus:
+      type: object
+      required: [h_commit, status]
+      properties:
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        status: { type: string }
+        proof_shred: { $ref: '#/components/schemas/Hex32' }
+        vault_deleted: { type: boolean }
+    SubjectSession:
+      type: object
+      required: [access_token, expires_at]
+      properties:
+        access_token: { type: string }
+        expires_at: { type: string, format: date-time }
+    SubjectSessionRevokeRequest:
+      type: object
+      properties:
+        scope: { type: string, enum: [current_session, all_sessions], default: current_session }
+        reason: { type: string, enum: [user_logout, suspected_compromise, rotation] }
+    SubjectSessionRevokeResponse:
+      type: object
+      required: [revoked, scope, revoked_at]
+      properties:
+        revoked: { type: boolean, const: true }
+        scope: { type: string, enum: [current_session, all_sessions] }
+        revoked_at: { type: string, format: date-time }
+    SubjectEscrowList:
+      type: object
+      required: [escrows]
+      properties:
+        escrows: { type: array, items: { $ref: '#/components/schemas/EscrowStatus' } }
+    VaultBlobResponse:
+      type: object
+      required: [h_commit, vault_ref, ciphertext_digest, retention_expires_at, download_url]
+      properties:
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        vault_ref: { type: string }
+        content_type: { type: string }
+        ciphertext_digest: { $ref: '#/components/schemas/Hex32' }
+        retention_expires_at: { type: string, format: date-time }
+        download_url: { type: string, format: uri }
+    AuditLogExport:
+      type: object
+      required: [generated_at, items]
+      properties:
+        generated_at: { type: string, format: date-time }
+        items: { type: array, items: { type: object, additionalProperties: true } }
+    RetentionStatus:
+      type: object
+      required: [h_commit, retention_expires_at]
+      properties:
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        retention_policy_id: { type: string }
+        retention_expires_at: { type: string, format: date-time }
+        shred_authority: { $ref: '#/components/schemas/ShredAuthorityMode' }
+        shred_condition_summary: { type: string }
+    ShredAuthorityMode:
+      type: string
+      enum: [subject, joint, operator, timelock, disabled]
+    ShredRequest:
+      type: object
+      required: [reason]
+      properties:
+        reason: { type: string, enum: [art_17_erasure, retention_expired, subject_request, partner_request, operator_request] }
+        evidence_ref: { type: string }
+    PreSigmaPayload:
+      type: object
+      required: [pda_id, schema_digest, condition_summary, shred_logic_summary, subject_visible_policy, recipients, conditional_recipients, payload_classification, h_commit_derivation_inputs, signing_challenge, confirmation_checklist, canonical_payload_digest]
+      properties:
+        pda_id: { type: string, format: uuid }
+        schema_digest: { $ref: '#/components/schemas/Hex32' }
+        condition_summary: { type: object, additionalProperties: true }
+        shred_logic_summary: { type: object, additionalProperties: true }
+        subject_visible_policy: { type: object, additionalProperties: true }
+        recipients: { type: array, items: { type: object, additionalProperties: true } }
+        conditional_recipients: { type: array, items: { type: object, additionalProperties: true } }
+        payload_classification: { type: object, additionalProperties: true }
+        h_commit_derivation_inputs: { type: object, additionalProperties: true }
+        signing_challenge: { $ref: '#/components/schemas/Hex32' }
+        confirmation_checklist: { type: array, items: { type: string } }
+        canonical_payload_digest: { $ref: '#/components/schemas/Hex32' }
+        display_items: { type: array, items: { type: object, additionalProperties: true } }
+    PreSigmaConfirmationRequest:
+      type: object
+      required: [confirmed_items, canonical_payload_digest, signing_challenge]
+      properties:
+        confirmed_items: { type: array, items: { type: string } }
+        canonical_payload_digest: { $ref: '#/components/schemas/Hex32' }
+        signing_challenge: { $ref: '#/components/schemas/Hex32' }
+    WebhookEvent:
+      type: object
+      required: [event_id, schema_version, event_type, created_at, partner_id, pda_id, data]
+      properties:
+        event_id: { type: string }
+        schema_version: { type: string }
+        event_type: { $ref: '#/components/schemas/WebhookEventType' }
+        created_at: { type: string, format: date-time }
+        partner_id: { type: string, format: uuid }
+        pda_id: { type: string, format: uuid }
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/CommitWebhookData'
+            - $ref: '#/components/schemas/SdWebhookData'
+            - $ref: '#/components/schemas/RevealWebhookData'
+            - $ref: '#/components/schemas/ChallengeWebhookData'
+            - $ref: '#/components/schemas/G4RefusalWebhookData'
+            - $ref: '#/components/schemas/ShredWebhookData'
+            - $ref: '#/components/schemas/HaltWebhookData'
+            - $ref: '#/components/schemas/RegistryWebhookData'
+            - $ref: '#/components/schemas/VaultWebhookData'
+    VerifyArtifactRequest:
+      type: object
+      required: [bundle]
+      properties:
+        bundle: { $ref: '#/components/schemas/RevealArtifactBundle' }
+        options: { type: object, additionalProperties: true }
+    VerifyArtifactResponse:
+      type: object
+      required: [overall, checks]
+      properties:
+        overall: { type: string, enum: [pass, fail] }
+        checks: { type: object, additionalProperties: true }
+    NetworkVerificationManifest:
+      type: object
+      required: [chain_id, contracts]
+      properties:
+        chain_id: { type: integer }
+        contracts: { type: object, additionalProperties: true }
+        deployment_block: { type: integer }
+        bytecode_hashes: { type: object, additionalProperties: true }
+    SdkVersionManifest:
+      type: object
+      required: [generated_at, packages]
+      properties:
+        generated_at: { type: string, format: date-time }
+        packages: { type: array, items: { $ref: '#/components/schemas/SdkPackageVersion' } }
+    SdkPackageVersion:
+      type: object
+      required: [name, semver, integrity_hash, lockfile_ref, release_signature, resolved_artifact_identity]
+      properties:
+        name: { type: string }
+        semver: { type: string }
+        integrity_hash: { $ref: '#/components/schemas/Hex32' }
+        lockfile_ref: { type: string }
+        release_signature: { type: string }
+        resolved_artifact_identity: { type: string }
+    PolicyEvidenceRef:
+      type: object
+      required: [policy_ref, digest]
+      properties:
+        policy_ref: { type: string }
+        digest: { $ref: '#/components/schemas/Hex32' }
+    Canonicalization:
+      type: object
+      required: [format, rfc, hash]
+      properties:
+        format: { type: string, const: JCS }
+        rfc: { type: string, const: RFC8785 }
+        hash: { type: string, const: keccak256(utf8(jcs(reveal_artifact_bundle_json_object))) }
+    ArtifactAuthorization:
+      type: object
+      required: [authorizationId, h_commit, commit_version, authorization_block, authorization_block_hash, authorization_timestamp, conditionRef, challenge_window_seconds, challenge_window_expired_at, finalized_at]
+      properties:
+        authorizationId: { $ref: '#/components/schemas/Hex32' }
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        commit_version: { type: string, const: '0x0302' }
+        authorization_block: { type: integer }
+        authorization_block_hash: { $ref: '#/components/schemas/Hex32' }
+        authorization_timestamp: { type: string, format: date-time }
+        conditionRef: { $ref: '#/components/schemas/Hex32' }
+        challenge_window_seconds: { type: integer }
+        challenge_window_expired_at: { type: string, format: date-time }
+        finalized_at: { type: string, format: date-time }
+    ArtifactPda:
+      type: object
+      required: [pda_id, pda_version, pda_root, trust_tier, operational_class]
+      properties:
+        pda_id: { type: string, format: uuid }
+        pda_version: { type: string }
+        pda_root: { $ref: '#/components/schemas/Hex32' }
+        trust_tier: { type: string, enum: [tier_a, tier_b, tier_c] }
+        operational_class: { type: string, enum: [consumer, b2b_partner, regulated, legal_effect] }
+    ArtifactRecipient:
+      type: object
+      required: [recipient_ref, schema_selector_digest]
+      properties:
+        recipient_ref: { type: string }
+        recipient_pubkey_id: { type: string }
+        schema_selector_digest: { $ref: '#/components/schemas/Hex32' }
+    ArtifactPlaintext:
+      type: object
+      required: [schema_selector_digest, schema_digest, content_encoding]
+      properties:
+        schema_selector_digest: { $ref: '#/components/schemas/Hex32' }
+        schema_digest: { $ref: '#/components/schemas/Hex32' }
+        content_encoding: { type: string }
+        fields: { type: object, additionalProperties: true }
+        object_ref: { type: string }
+        field_hashes: { type: object, additionalProperties: { $ref: '#/components/schemas/Hex32' } }
+    IssuerAttestationBlock:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [not_configured, present] }
+        issuer_id: { type: string }
+        issuer_registry_ref: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        issuer_signing_key_id: { type: string }
+        signature_alg: { type: string }
+        signed_payload_digest: { $ref: '#/components/schemas/Hex32' }
+        signature: { type: string }
+        subject_commitment_v3: { $ref: '#/components/schemas/Hex32' }
+        person_key_ref: { type: string }
+        valid_from: { type: string, format: date-time }
+        valid_until: { type: string, format: date-time }
+        revocation_ref: { type: string }
+    ProvenanceBlock:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [not_configured, present] }
+        p15_attestations_root: { $ref: '#/components/schemas/Hex32' }
+        attestor_registry_ref: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        field_attestations:
+          type: array
+          items: { $ref: '#/components/schemas/FieldProvenanceAttestation' }
+    FieldProvenanceAttestation:
+      type: object
+      required: [field_path, field_hash, attestor_id, attestor_signing_key_id, signature_alg, signed_payload_digest, signature, merkle_proof]
+      properties:
+        field_path: { type: string }
+        field_hash: { $ref: '#/components/schemas/Hex32' }
+        attestor_id: { type: string }
+        attestor_signing_key_id: { type: string }
+        signature_alg: { type: string }
+        signed_payload_digest: { $ref: '#/components/schemas/Hex32' }
+        signature: { type: string }
+        merkle_proof: { type: array, items: { $ref: '#/components/schemas/Hex32' } }
+        valid_from: { type: string, format: date-time }
+        valid_until: { type: string, format: date-time }
+        revocation_ref: { type: string }
+    SigmaEvidence:
+      type: object
+      required: [sigma, authority_ref, public_after_reveal]
+      properties:
+        sigma: { $ref: '#/components/schemas/Hex' }
+        authority_ref: { $ref: '#/components/schemas/Hex32' }
+        variant: { type: string }
+        stanza_index: { type: integer }
+        attestation_ref: { $ref: '#/components/schemas/Hex32' }
+        phase: { type: integer, enum: [1, 2] }
+        public_after_reveal: { type: boolean, const: true }
+    SigmaBlock:
+      type: object
+      required: [sigma_lit, sigma_g3, sigma_g4]
+      properties:
+        sigma_subject: { $ref: '#/components/schemas/Hex' }
+        sigma_lit: { $ref: '#/components/schemas/SigmaEvidence' }
+        sigma_g3: { $ref: '#/components/schemas/SigmaEvidence' }
+        sigma_g4: { $ref: '#/components/schemas/SigmaEvidence' }
+        sigma_conditional: { type: array, items: { $ref: '#/components/schemas/SigmaEvidence' } }
+    ChainProofs:
+      type: object
+      required: [chain_id, condition_engine_address, reveal_authorized_emitter, reveal_authorized_event_signature, reveal_authorized_topics, receipt_proof, commit_tx_hash, commit_block, commit_block_hash, reveal_authorized_tx_hash, reveal_authorized_log_index, reveal_authorized_block, reveal_authorized_block_hash, base_finality_confirmations]
+      properties:
+        chain_id: { type: integer }
+        condition_engine_address: { $ref: '#/components/schemas/EvmAddress' }
+        reveal_authorized_emitter: { $ref: '#/components/schemas/EvmAddress' }
+        reveal_authorized_event_signature: { type: string }
+        reveal_authorized_topics: { type: array, items: { $ref: '#/components/schemas/Hex32' } }
+        receipt_proof: { $ref: '#/components/schemas/ReceiptProof' }
+        commit_tx_hash: { $ref: '#/components/schemas/Hex32' }
+        commit_block: { type: integer }
+        commit_block_hash: { $ref: '#/components/schemas/Hex32' }
+        reveal_authorized_tx_hash: { $ref: '#/components/schemas/Hex32' }
+        reveal_authorized_log_index: { type: integer }
+        reveal_authorized_block: { type: integer }
+        reveal_authorized_block_hash: { $ref: '#/components/schemas/Hex32' }
+        base_finality_confirmations: { type: integer }
+        finalized_at: { type: string, format: date-time }
+        challenge_window_expired_at: { type: string, format: date-time }
+        condition_module: { $ref: '#/components/schemas/EvmAddress' }
+        conditionRef: { $ref: '#/components/schemas/Hex32' }
+        shred_registry_state_at_reveal: { type: string }
+    ReceiptProof:
+      type: object
+      required: [proof_type, block_number, block_hash, log_index]
+      properties:
+        proof_type: { type: string }
+        block_number: { type: integer }
+        block_hash: { $ref: '#/components/schemas/Hex32' }
+        log_index: { type: integer }
+        proof_nodes: { type: array, items: { type: string } }
+    RegistrySnapshots:
+      type: object
+      required: [authorization_block, authorization_block_hash, registry_contracts]
+      properties:
+        authorization_block: { type: integer }
+        authorization_block_hash: { $ref: '#/components/schemas/Hex32' }
+        registry_contracts: { type: object, additionalProperties: { $ref: '#/components/schemas/RegistrySnapshotRef' } }
+        pda_registry: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        condition_module_registry: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        gate_authority_registries: { type: object, additionalProperties: { $ref: '#/components/schemas/RegistrySnapshotRef' } }
+        shred_registry: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        issuer_registry: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        attestor_registry: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+        sd_registry: { $ref: '#/components/schemas/RegistrySnapshotRef' }
+    ArtifactShredState:
+      type: object
+      required: [h_commit, shred_state]
+      properties:
+        h_commit: { $ref: '#/components/schemas/Hex32' }
+        shred_state: { type: string }
+        proof_shred: { $ref: '#/components/schemas/Hex32' }
+        checked_at_block: { type: integer }
+        checked_at_block_hash: { $ref: '#/components/schemas/Hex32' }
+    ArtifactSdRefs:
+      type: object
+      required: [status]
+      properties:
+        status: { type: string, enum: [not_configured, present, failed, partial_failure] }
+        sdMerkleRoot: { type: string }
+        disclosure_refs: { type: array, items: { type: string } }
+        revocation_refs: { type: array, items: { type: string } }
+    ArtifactVerification:
+      type: object
+      required: [artifact_bundle_digest, verifier_version]
+      properties:
+        artifact_bundle_digest: { $ref: '#/components/schemas/Hex32' }
+        verifier_version: { type: string }
+        checks: { type: object, additionalProperties: true }
+    PiiStatement:
+      type: string
+      enum: [recipient_filtered_plaintext_after_valid_reveal]
+    WebhookEventType:
+      type: string
+      enum: [commit.finalized, commit.failed, sd.completed, sd.partial_failure, reveal.authorized, challenge.opened, challenge.resolved, reveal.ready_for_gate_signing, reveal.finalized, reveal.failed, g4.refused, shred.authorized, shred.challenge_opened, shred.finalized, halt.triggered, registry.deprecated, vault.retention_expiring, vault.shredded]
+    CommitWebhookData:
+      type: object
+      required: [h_commit, status]
+      properties: { h_commit: { $ref: '#/components/schemas/Hex32' }, status: { type: string } }
+    SdWebhookData:
+      type: object
+      required: [h_commit, status]
+      properties: { h_commit: { $ref: '#/components/schemas/Hex32' }, status: { type: string }, sdMerkleRoot: { type: string } }
+    RevealWebhookData:
+      type: object
+      required: [authorizationId, h_commit, status]
+      properties: { authorizationId: { $ref: '#/components/schemas/Hex32' }, h_commit: { $ref: '#/components/schemas/Hex32' }, status: { type: string }, artifact_bundle_digest: { $ref: '#/components/schemas/Hex32' } }
+    ChallengeWebhookData:
+      type: object
+      required: [authorizationId, h_commit, status]
+      properties: { authorizationId: { $ref: '#/components/schemas/Hex32' }, h_commit: { $ref: '#/components/schemas/Hex32' }, status: { type: string } }
+    G4RefusalWebhookData:
+      type: object
+      required: [authorizationId, h_commit, reason_code]
+      properties: { authorizationId: { $ref: '#/components/schemas/Hex32' }, h_commit: { $ref: '#/components/schemas/Hex32' }, reason_code: { type: string }, encrypted_reason_ref: { type: string } }
+    ShredWebhookData:
+      type: object
+      required: [h_commit, status]
+      properties: { h_commit: { $ref: '#/components/schemas/Hex32' }, status: { type: string }, proof_shred: { $ref: '#/components/schemas/Hex32' } }
+    HaltWebhookData:
+      type: object
+      required: [halt_ref, status]
+      properties: { halt_ref: { type: string }, status: { type: string }, encrypted_diagnostic_ref: { type: string } }
+    RegistryWebhookData:
+      type: object
+      required: [registry_name, registry_ref]
+      properties: { registry_name: { type: string }, registry_ref: { type: string }, effective_block: { type: integer } }
+    VaultWebhookData:
+      type: object
+      required: [h_commit, status]
+      properties: { h_commit: { $ref: '#/components/schemas/Hex32' }, status: { type: string }, retention_expires_at: { type: string, format: date-time } }

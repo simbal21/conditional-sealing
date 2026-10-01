@@ -1,0 +1,10 @@
+{
+  "name": "@cealis/g4-phase1-daemon",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {}
+}

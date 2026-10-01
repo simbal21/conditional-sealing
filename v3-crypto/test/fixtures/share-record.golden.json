@@ -1,0 +1,104 @@
+{
+  "_meta": {
+    "comment": "LOCKED — Phase A seed; do not regenerate. Codex chunks B/C/D/E MUST NOT modify this file.",
+    "spec": "docs/specs/cryptography-spec.md §6.3.2",
+    "encoding": "SCALE positional struct: u8 share_domain ‖ u8 share_role ‖ u32 LE logical_index ‖ u8 x ‖ [u8;32] value",
+    "bytes_per_record": 39,
+    "phase": "A",
+    "value_provenance": "32-byte share values are sourced from the §6.3.4 normative test vectors (top-level k=3 positive + nested k=2 positive). The SCALE wrapping here exercises the codec; Phase D consumes these same values when implementing Shamir.combine."
+  },
+  "vectors": [
+    {
+      "name": "top_level_lit",
+      "description": "TOP_LEVEL / LIT, x=1. Positive top-level vector x=1 share from §6.3.4.",
+      "record": {
+        "share_domain": 1,
+        "share_role": 1,
+        "logical_index": 0,
+        "x": 1,
+        "value": "0xb0b1b2b3b4b5b6b7b8b9babbbcbdbebf808182838485868788898a8b8c8d8e8f"
+      },
+      "encoded_hex": "0x01010000000001b0b1b2b3b4b5b6b7b8b9babbbcbdbebf808182838485868788898a8b8c8d8e8f"
+    },
+    {
+      "name": "top_level_g3",
+      "description": "TOP_LEVEL / G3, x=2. Positive top-level vector x=2 share from §6.3.4.",
+      "record": {
+        "share_domain": 1,
+        "share_role": 2,
+        "logical_index": 1,
+        "x": 2,
+        "value": "0x9691989f8a8d8483aea9a0a7b2b5bcbba6a1a8afbabdb4b39e99909782858c8b"
+      },
+      "encoded_hex": "0x010201000000029691989f8a8d8483aea9a0a7b2b5bcbba6a1a8afbabdb4b39e99909782858c8b"
+    },
+    {
+      "name": "top_level_g4",
+      "description": "TOP_LEVEL / G4, x=3. Positive top-level vector x=3 share from §6.3.4.",
+      "record": {
+        "share_domain": 1,
+        "share_role": 3,
+        "logical_index": 2,
+        "x": 3,
+        "value": "0x2621282f3a3d34331e19101702050c0b3631383f2a2d24230e09000712151c1b"
+      },
+      "encoded_hex": "0x010302000000032621282f3a3d34331e19101702050c0b3631383f2a2d24230e09000712151c1b"
+    },
+    {
+      "name": "top_level_recipient_aggregate",
+      "description": "TOP_LEVEL / RECIPIENT_AGGREGATE, x=4. Aggregate value from §6.3.4 nested-recipient vector.",
+      "record": {
+        "share_domain": 1,
+        "share_role": 4,
+        "logical_index": 3,
+        "x": 4,
+        "value": "0x404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f"
+      },
+      "encoded_hex": "0x01040300000004404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f"
+    },
+    {
+      "name": "recipient_branch_first",
+      "description": "RECIPIENT_BRANCH / CONDITIONAL_RECIPIENT, x=1 (first nested recipient). Nested k=2 positive vector x=1 share from §6.3.4.",
+      "record": {
+        "share_domain": 2,
+        "share_role": 5,
+        "logical_index": 0,
+        "x": 1,
+        "value": "0x8080808080808080808080808080808080808080808080808080808080808080"
+      },
+      "encoded_hex": "0x020500000000018080808080808080808080808080808080808080808080808080808080808080"
+    },
+    {
+      "name": "recipient_branch_second",
+      "description": "RECIPIENT_BRANCH / CONDITIONAL_RECIPIENT, x=2 (second nested recipient). Nested k=2 positive vector x=2 share from §6.3.4.",
+      "record": {
+        "share_domain": 2,
+        "share_role": 5,
+        "logical_index": 1,
+        "x": 2,
+        "value": "0xdbd8ddded7d4d1d2c3c0c5c6cfccc9caebe8edeee7e4e1e2f3f0f5f6fffcf9fa"
+      },
+      "encoded_hex": "0x02050100000002dbd8ddded7d4d1d2c3c0c5c6cfccc9caebe8edeee7e4e1e2f3f0f5f6fffcf9fa"
+    }
+  ],
+  "negative_vectors": [
+    {
+      "name": "x_zero",
+      "description": "x=0 must fail validation with ERR_SHAMIR_SHARE_INDEX_INVALID.",
+      "record": { "share_domain": 1, "share_role": 1, "logical_index": 0, "x": 0, "value_hex": "0x0000000000000000000000000000000000000000000000000000000000000000" },
+      "expected_error": "ERR_SHAMIR_SHARE_INDEX_INVALID"
+    },
+    {
+      "name": "domain_role_mismatch_top_level_conditional",
+      "description": "TOP_LEVEL with role CONDITIONAL_RECIPIENT must fail with ERR_SHARE_RECORD_DOMAIN_ROLE_MISMATCH.",
+      "record": { "share_domain": 1, "share_role": 5, "logical_index": 0, "x": 1, "value_hex": "0x0000000000000000000000000000000000000000000000000000000000000000" },
+      "expected_error": "ERR_SHARE_RECORD_DOMAIN_ROLE_MISMATCH"
+    },
+    {
+      "name": "domain_role_mismatch_recipient_branch_g4",
+      "description": "RECIPIENT_BRANCH with role G4 must fail with ERR_SHARE_RECORD_DOMAIN_ROLE_MISMATCH (cross-domain substitution defense, §6.3.4).",
+      "record": { "share_domain": 2, "share_role": 3, "logical_index": 0, "x": 1, "value_hex": "0x0000000000000000000000000000000000000000000000000000000000000000" },
+      "expected_error": "ERR_SHARE_RECORD_DOMAIN_ROLE_MISMATCH"
+    }
+  ]
+}

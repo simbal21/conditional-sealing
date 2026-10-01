@@ -1,0 +1,9 @@
+{
+  "vendorConfirmation": "VENDOR_CONFIRMATION_LIT_CORE_API",
+  "baseUrl": "https://chipotle.lit.mock",
+  "apiVersion": "chipotle-core-rest-v1-fixture",
+  "litNodeClientVersion": "7.3.0",
+  "contractsSdkVersion": "7.4.0",
+  "certificatePinSha256": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "capturedAt": "2026-05-11T00:00:00.000Z"
+}

@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "comment": "// LOCKED — Phase C seed; do not regenerate. Generated for sigma_G4 verifier tests.",
+    "spec": "docs/specs/cryptography-spec.md §9",
+    "phase": "C"
+  },
+  "phase1": {
+    "binary_hash": "0x90959a9fa4a9aeb3b8bdc2c7ccd1d6dbe0e5eaeff4f9fe03080d12171c21262b",
+    "block_hash": "0xa0a3a6a9acafb2b5b8bbbec1c4c7cacdd0d3d6d9dcdfe2e5e8ebeef1f4f7fafd",
+    "authorizationId": "0x01132537495b6d7f91a3b5c7d9ebfd0f21334557697b8d9fb1c3d5e7f90b1d2f",
+    "h_commit": "0x21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa",
+    "timestamp": "1716206400",
+    "tag_g4_attestation_v3": "0x780a10ca68087b920d7f54d033295ea9f0bf2a3ade9fa4549f9d88bef964328d",
+    "signing_input": "0x780a10ca68087b920d7f54d033295ea9f0bf2a3ade9fa4549f9d88bef964328d90959a9fa4a9aeb3b8bdc2c7ccd1d6dbe0e5eaeff4f9fe03080d12171c21262ba0a3a6a9acafb2b5b8bbbec1c4c7cacdd0d3d6d9dcdfe2e5e8ebeef1f4f7fafd01132537495b6d7f91a3b5c7d9ebfd0f21334557697b8d9fb1c3d5e7f90b1d2f21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa00000000664b3b40",
+    "private_key_for_fixture_only": "0x7174777a7d808386898c8f9295989b9ea1a4a7aaadb0b3b6b9bcbfc2c5c8cbce",
+    "authority_pubkey": "0xd926efcac4d72d249c24d50960aedbdba3533b253a20103f10a398ec9452512e",
+    "signature": "0xe98424e08dccc2c33c8bf3aede5fd77fc8256c470b9b6b1861ccf93c9b9c16dd79b4507ba343cc440b01ca7e309d944fa91e6cff27edf0216a32869474fe040c"
+  },
+  "phase2_stub": {
+    "dcap_quote": "0x646361702d73747562"
+  }
+}

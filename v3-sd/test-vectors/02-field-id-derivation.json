@@ -1,0 +1,13 @@
+{
+  "status": "PLACEHOLDER_M6_AWAITING_PRODUCTION_REGEN",
+  "production_note": "These vectors are Phase E fixture placeholders with structurally-correct JSON shape but cryptographically-meaningless field values (digests, salts, commitments, proofs, roots). Partner SDK consumers MUST NOT validate their implementation against these values. Real reference vectors will be regenerated from the live @cealis/v3-sd code paths at M7/M8 and the placeholder marker dropped.",
+  "category": "02-field-id-derivation",
+  "vectors": [
+    {
+      "field_type": "country_code",
+      "path": "kyc.country",
+      "schema_digest": "0x0202020202020202020202020202020202020202020202020202020202020202",
+      "field_id": "0x0201020102010201020102010201020102010201020102010201020102010201"
+    }
+  ]
+}

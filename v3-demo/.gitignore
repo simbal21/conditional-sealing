@@ -1,0 +1,8 @@
+dist/
+node_modules/
+coverage/
+.coverage/
+output/
+*.log
+.env
+.env.live

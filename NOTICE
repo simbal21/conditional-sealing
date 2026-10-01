@@ -1,0 +1,17 @@
+Conditional Sealing — reference implementation
+Copyright 2026 Simon Baltes
+Developed under the working name Cealis.
+
+This product includes software developed by Simon Baltes
+(https://github.com/simbal21/conditional-sealing).
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+Documentation under docs/ is licensed under Creative Commons
+Attribution 4.0 International (CC BY 4.0) — see docs/LICENSE.
+
+Third-party code vendored under contracts/lib/ retains its own licenses:
+forge-std (MIT/Apache-2.0, foundry-rs) and openzeppelin-contracts (MIT,
+OpenZeppelin) — see the LICENSE files inside those directories.
+
+Status: archived reference implementation, retired June 2026.
+Never independently audited. Never used in production. Testnet only.

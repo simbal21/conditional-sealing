@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "comment": "LOCKED — Phase A seed; do not regenerate. Codex chunks B/C/D/E MUST NOT modify this file.",
+    "spec": "docs/specs/cryptography-spec.md §2.3",
+    "derivation": "TAG_<NAME>_V3 = keccak256(bytes(<LABEL>))",
+    "count": 30,
+    "phase": "A"
+  },
+  "tags": [
+    { "symbol": "TAG_COMMIT_V3", "label": "CEALIS_V3_COMMITMENT_HASH_V3", "digest": "0x2d2217e4d967ed248e767e28fbd079ef83164a25c8cbcf94387c115336726615" },
+    { "symbol": "TAG_AUTHID_V3", "label": "CEALIS_V3_AUTH_ID_V3", "digest": "0x2515365985f25edab9af1617075766433983edd0fd267b0a8a55d37e7d838890" },
+    { "symbol": "TAG_SUBJECT_V3", "label": "CEALIS_V3_SUBJECT_V3", "digest": "0x7a3cd7f29faeb061b53c59ce8eecfa833ecf1cbf49300f3a7c3302b29affc667" },
+    { "symbol": "TAG_SIGMA_SUBJECT_V3", "label": "CEALIS_V3_SIGMA_SUBJECT_V3", "digest": "0xd3444d111201f423e8497cbd494ea869283dacd59b3bbafe8c94e851a666685c" },
+    { "symbol": "TAG_PDA_ROOT_V3", "label": "CEALIS_V3_PDA_ROOT_V3", "digest": "0x2e9aef6890ee90a57f6cbc9f7301799f914fe95b03dd711065ebf5b8b3fa31ec" },
+    { "symbol": "TAG_AAD_V3", "label": "CEALIS_V3_AAD_V3", "digest": "0x5f09deb22a5104e36edaa6ab19e7de91e965cd565b2b1ad45da57eaa2aae9072" },
+    { "symbol": "TAG_AEAD_V3", "label": "CEALIS_V3_AEAD_V3", "digest": "0x5a182280c02d67bf6e1451c6eaf643fe5ee7a53483bea0798e9a9089098a5cc7" },
+    { "symbol": "TAG_COMMIT_CONTEXT_V3", "label": "CEALIS_V3_COMMIT_CONTEXT_V3", "digest": "0x48d671e728ee47bc98de43d61df5a39cd3905bd05b4486b31f2a7dd483b45963" },
+    { "symbol": "TAG_ATTESTATION_CONTEXT_V3", "label": "CEALIS_V3_ATTESTATION_CONTEXT_V3", "digest": "0x04db9afc346d39bc8d5013db28b4f9d99797c28deed4d05c8c5e3be621a361f7" },
+    { "symbol": "TAG_LIT_ACC_BINDING_V3", "label": "CEALIS_V3_LIT_ACC_BINDING_V3", "digest": "0xa6c12b5473ccee32383b9f18e6b91baee14ac94581f7f34b2c2282186ceaab47" },
+    { "symbol": "TAG_DCIPHER_IBE_BINDING_V3", "label": "CEALIS_V3_DCIPHER_IBE_BINDING_V3", "digest": "0xbdd10f2d92628b59bf15813a6126c1920c656bf8832ba29815b0646307d8b5db" },
+    { "symbol": "TAG_DRAND_ROUND_BINDING_V3", "label": "CEALIS_V3_DRAND_ROUND_BINDING_V3", "digest": "0xfa773d04a6919087f36c35e8599e65570d1845b212874d45a2605bf9566bd507" },
+    { "symbol": "TAG_G3_BINDING_V3", "label": "CEALIS_V3_G3_BINDING_V3", "digest": "0xf00f698c5e72aab567f4ee2ecd86d022744b1c708bd26d0905ef1e991038bd80" },
+    { "symbol": "TAG_G4_ATTESTATION_V3", "label": "CEALIS_V3_G4_ATTESTATION_V3", "digest": "0x780a10ca68087b920d7f54d033295ea9f0bf2a3ade9fa4549f9d88bef964328d" },
+    { "symbol": "TAG_G4_ATTESTATION_AUTHORITY_V3", "label": "CEALIS_V3_G4_ATTESTATION_AUTHORITY_V3", "digest": "0xc9d74396e5da1551f663c9b50d3058420dffba15eb9e7bf55d0265dbf56f4b5b" },
+    { "symbol": "TAG_COMPOSITE_IDENTITY_V3", "label": "CEALIS_V3_COMPOSITE_IDENTITY_V3", "digest": "0xb6c2d731d84d245f6e37d6a113a0f7aac5e6f14f60c09d63d47efaee20596a21" },
+    { "symbol": "TAG_STANZA_MAC_V3", "label": "CEALIS_V3_STANZA_MAC_V3", "digest": "0x65b576700338e0f13084d7ee44e4c1dae77d778b0fc965f13b5ce3e38ffd6e86" },
+    { "symbol": "TAG_STANZA_WRAP_V3", "label": "CEALIS_V3_STANZA_WRAP_V3", "digest": "0x60ca44a3bb83006680d19c1a11e6d5c12a34bbadd2097c33933dc4bd9ac48eeb" },
+    { "symbol": "TAG_STANZA_WRAP_NONCE_V3", "label": "CEALIS_V3_STANZA_WRAP_NONCE_V3", "digest": "0x0856b03957f0a8f423634d6eccea6eb02dbe209e252e09a9060f711c2f0a1708" },
+    { "symbol": "TAG_CONDITIONAL_RECIPIENT_BINDING_V3", "label": "CEALIS_V3_CONDITIONAL_RECIPIENT_BINDING_V3", "digest": "0xdf3f00fda919fec58008c127c1822fdcec3d5612993e0177326e872d2d553522" },
+    { "symbol": "TAG_REVEAL_CHALLENGE_V3", "label": "CEALIS_V3_REVEAL_CHALLENGE_V3", "digest": "0x24424bcb1b985ce0b10aeef9cd15acf4cc94c29e9d3d71d3c0162c79e2d88818" },
+    { "symbol": "TAG_RECIPIENT_LEAF_V3", "label": "CEALIS_V3_RECIPIENT_LEAF_V3", "digest": "0x308ac45ca3ee14f06f5ef15120925442de01d79048599779650c1b31c3f429ac" },
+    { "symbol": "TAG_P15_ATTESTATION_V3", "label": "CEALIS_V3_P15_ATTESTATION_V3", "digest": "0x43295912c094bc7c0d669ec40c58fd05091f8845043fbdbbd6664b07ef3c15fd" },
+    { "symbol": "TAG_ARTIFACT_V3", "label": "CEALIS_V3_ARTIFACT_V3", "digest": "0x5d36d4c5c19b3b62647633ca3a4bbffe0209c21bc1a51a63cfe856f0c08b360b" },
+    { "symbol": "TAG_PLUGIN_VERSION_V3", "label": "CEALIS_V3_PLUGIN_VERSION_V3", "digest": "0xf93f76d25d9c1610121890221228733a290725b01dd876e459493ea935106001" },
+    { "symbol": "TAG_ROTATION_LOG_ANCHOR_V3", "label": "CEALIS_V3_ROTATION_LOG_ANCHOR_V3", "digest": "0xac6ecd58f3a10deaa3f644d147ec92e6672de21eb53d842804bce97df14dfafc" },
+    { "symbol": "TAG_CONDITIONAL_RECIPIENTS_POLICY_V3", "label": "CEALIS_V3_CONDITIONAL_RECIPIENTS_POLICY_V3", "digest": "0x13bb7366e0f36195c405c280565aaebc46af8735e166ca1023e22e635170eaa9" },
+    { "symbol": "TAG_SUPERSEDED_COMMIT_REGISTRY_V3", "label": "CEALIS_V3_SUPERSEDED_COMMIT_REGISTRY_V3", "digest": "0xc9c3c0c6dd22412a9da1c864e5ea8144ee9c791543522c5da49ea0f14c70732e" },
+    { "symbol": "TAG_ROTATION_AUTHORIZATION_V3", "label": "CEALIS_V3_ROTATION_AUTHORIZATION_V3", "digest": "0x6ed7799d69ba728883ca59405d310aeaf96e4d0f90340302099537de7316d0f7" },
+    { "symbol": "TAG_ORACLE_REGISTRY_V3", "label": "CEALIS_V3_ORACLE_REGISTRY_V3", "digest": "0x5fd88bdfc47cbf2f7b151337f5ee0f4bf08a20394311a0d85e60f921e2b36010" }
+  ]
+}

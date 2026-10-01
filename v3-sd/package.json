@@ -1,0 +1,77 @@
+{
+  "name": "@cealis/v3-sd",
+  "version": "0.1.0",
+  "description": "Cealis V3 Selective Disclosure pipeline per docs/specs/sd-spec-v2.md (S2-7). TEE-side per-field Poseidon commitments + sdMerkleRoot + 4 leaf PLONK predicate circuits (range/equality/set_membership/non_equality) + composed wrapper + per-predicate on-chain verifiers + revocation worker. Asymmetric isolation from escrow normative (§15). One-way edge from DEK normative (§1.5). Cealis-internal-only at all phases.",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    },
+    "./errors": {
+      "types": "./dist/errors/index.d.ts",
+      "default": "./dist/errors/index.js"
+    },
+    "./tags": {
+      "types": "./dist/tags/index.d.ts",
+      "default": "./dist/tags/index.js"
+    },
+    "./merkle": {
+      "types": "./dist/merkle/index.d.ts",
+      "default": "./dist/merkle/index.js"
+    },
+    "./encoding": {
+      "types": "./dist/encoding/field-encoding.d.ts",
+      "default": "./dist/encoding/field-encoding.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "SPEC-COMPLIANCE-GUARD-M6.md",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint . --max-warnings 0",
+    "clean": "rm -rf dist coverage .coverage",
+    "setup:circuits": "node scripts/setup-circuits.mjs",
+    "wording-lint": "node scripts/wording-lint.mjs",
+    "check-m2-storage-layout": "node scripts/check-m2-storage-layout.mjs"
+  },
+  "dependencies": {
+    "@cealis/v3-crypto": "workspace:*",
+    "@noble/hashes": "1.8.0",
+    "@noble/curves": "1.9.7",
+    "circomlibjs": "0.1.7",
+    "snarkjs": "0.7.4",
+    "viem": "2.21.55",
+    "canonicalize": "2.0.0",
+    "pino": "9.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.18",
+    "@typescript-eslint/eslint-plugin": "8.59.2",
+    "@typescript-eslint/parser": "8.59.2",
+    "@vitest/coverage-v8": "3.2.4",
+    "eslint": "9.17.0",
+    "prettier": "3.4.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}

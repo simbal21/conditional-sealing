@@ -1,0 +1,52 @@
+cff-version: 1.2.0
+message: >-
+  If you reference this work, please cite it using the metadata below.
+  The code in this repository is licensed Apache-2.0; the documentation
+  and specification corpus (docs/specs/, docs/designs/, docs/research/,
+  WHITEPAPER.md) is licensed CC BY 4.0.
+title: "Conditional Sealing: a reference implementation"
+type: software
+authors:
+  - family-names: Baltes
+    given-names: Simon
+repository-code: "https://github.com/simbal21/conditional-sealing"
+license: Apache-2.0
+version: 1.0.0-archive
+date-released: "2026-10-01"
+abstract: >-
+  A reference implementation of conditional sealing, built between March and
+  June 2026: data is encrypted once, its key is split 3-of-3 by Shamir secret
+  sharing across three independent signing gates — a rented threshold network
+  (Lit Protocol), a rented randomness/attestation network (drand or dcipher),
+  and a refusal-only operator verifier — all locked behind a fourth gate, the
+  chain, as the mandatory trigger holding no share; release happens only when
+  a pre-agreed, chain-verified condition is met. Alongside the
+  construction, the release documents a first-class negative result: a
+  pre-committed, falsifiable six-condition demand instrument applied
+  adversarially to 157 candidate companies found zero clean fits, and the
+  project was retired on that evidence. Archived as a design record and
+  reference — never externally audited, never run in production, with its
+  on-chain components deployed to a public testnet only. The system was
+  developed under the working name Cealis; the working name is preserved in
+  the frozen specifications, audit records, and on-chain artifacts.
+keywords:
+  - conditional sealing
+  - threshold cryptography
+  - secret sharing
+  - data escrow
+  - smart contracts
+  - timelock encryption
+  - witness encryption
+  - negative result
+  - demand study
+preferred-citation:
+  type: report
+  authors:
+    - family-names: Baltes
+      given-names: Simon
+  title: >-
+    Conditional Sealing: Threshold-Gated Data Escrow with an On-Chain Release
+    Trigger — Design and Evaluation Note
+  year: 2026
+  month: 10
+  url: "https://github.com/simbal21/conditional-sealing/blob/main/docs/paper.md"

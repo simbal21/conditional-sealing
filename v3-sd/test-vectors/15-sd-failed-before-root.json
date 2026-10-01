@@ -1,0 +1,13 @@
+{
+  "status": "PLACEHOLDER_M6_AWAITING_PRODUCTION_REGEN",
+  "production_note": "These vectors are Phase E fixture placeholders with structurally-correct JSON shape but cryptographically-meaningless field values (digests, salts, commitments, proofs, roots). Partner SDK consumers MUST NOT validate their implementation against these values. Real reference vectors will be regenerated from the live @cealis/v3-sd code paths at M7/M8 and the placeholder marker dropped.",
+  "category": "15-sd-failed-before-root",
+  "vectors": [
+    {
+      "commit_AAD_sdMerkleRoot": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "pda_sd_enabled": true,
+      "status": "failed",
+      "mode": "sd_failed_before_root"
+    }
+  ]
+}

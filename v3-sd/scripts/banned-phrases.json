@@ -1,0 +1,26 @@
+{
+  "$comment": "App. M.2 verbatim banned phrasings from docs/specs/sd-spec-v2.md lines 2537-2549. Phase F `wording-lint.mjs` greps every SDK string + README + JSDoc against this list. Hits FAIL the lint gate.",
+  "banned_phrases": [
+    "SD partially unlocks the escrow",
+    "The partner can later ask for new proofs from the committed data",
+    "ZK means the partner learns nothing",
+    "Cleartext SD is private",
+    "Mode B supports the same SD flow",
+    "Revocation deletes partner-held proofs",
+    "SD proof validity is the same as real-world truth",
+    "On-chain proof verification is required for escrow security",
+    "The SD root is AEAD-bound"
+  ],
+  "lint_review_keys": [
+    "partial unlock",
+    "partial release",
+    "later proof",
+    "learns nothing",
+    "fully private disclosure",
+    "Mode B SD",
+    "revocation deletes",
+    "AEAD-bound SD",
+    "any predicate"
+  ],
+  "$comment_aead_bound": "The 'AEAD-bound SD root' string IS allowed in narrow context — specifically for commit_version = 0x0302 active code per §App.M.2 line 2549 + §J.3 line 2432 ('Public-copy lint rule allowing \"AEAD-bound SD root\" only for commit_version = 0x0302 or later'). Phase F wording-lint script must support a context-aware allow-list for this case OR ban globally then enumerate the §0x0302 allow-listed locations."
+}

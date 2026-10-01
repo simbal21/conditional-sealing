@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "comment": "LOCKED — Phase A seed; do not regenerate. Codex chunks B/C/D/E MUST NOT modify this file.",
+    "spec": "docs/specs/cryptography-spec.md §6.1.4",
+    "construction": "stanza_mac = keccak256(TAG_STANZA_MAC_V3 ‖ stanza_index_u32_BE ‖ binding_tag ‖ plugin_version_digest)",
+    "mac_input_bytes": 68,
+    "preimage_bytes": 100,
+    "phase": "A"
+  },
+  "fixture": {
+    "plugin_version_digest": "0xdeadbeef00112233445566778899aabbccddeeff00112233445566778899aabb"
+  },
+  "vectors": [
+    {
+      "name": "stanza0_lit_acc",
+      "stanza_index": 0,
+      "binding_tag": "0xa6c12b5473ccee32383b9f18e6b91baee14ac94581f7f34b2c2282186ceaab47",
+      "binding_tag_symbol": "TAG_LIT_ACC_BINDING_V3",
+      "stanza_mac": "0x671f316b59e9646dd223249b6637a2e4540bc00882fabf12d8a536a1e8f21ef3"
+    },
+    {
+      "name": "stanza1_g3_drand",
+      "stanza_index": 1,
+      "binding_tag": "0xfa773d04a6919087f36c35e8599e65570d1845b212874d45a2605bf9566bd507",
+      "binding_tag_symbol": "TAG_DRAND_ROUND_BINDING_V3",
+      "stanza_mac": "0xd90a60d46c0a389946d6e23d5ca78ea965bdd366cd7f35ce5e2cd5278c9c36dc"
+    },
+    {
+      "name": "stanza1_g3_dcipher",
+      "description": "Alternative G3 binding when g3_choice=0 (dcipher IBE). Same stanza_index as drand variant — exactly one appears per commit.",
+      "stanza_index": 1,
+      "binding_tag": "0xbdd10f2d92628b59bf15813a6126c1920c656bf8832ba29815b0646307d8b5db",
+      "binding_tag_symbol": "TAG_DCIPHER_IBE_BINDING_V3",
+      "stanza_mac": "0xdbe3d2ff70a3a947f4aa592208746c3bbbeec5b36ba9e181faf3c5f284dc5153"
+    },
+    {
+      "name": "stanza2_g4_authority",
+      "stanza_index": 2,
+      "binding_tag": "0xc9d74396e5da1551f663c9b50d3058420dffba15eb9e7bf55d0265dbf56f4b5b",
+      "binding_tag_symbol": "TAG_G4_ATTESTATION_AUTHORITY_V3",
+      "stanza_mac": "0xa608d3fa29a2075f065285ae860a53cb0c79c12458413c2a70304ebe78e259ca"
+    },
+    {
+      "name": "stanza3_conditional_recipient",
+      "description": "Gate-stanza MAC for a CONDITIONAL_RECIPIENT_* stanza. Per §6.1.6 + §6.1.7, conditional-recipient stanzas carry an ADDITIONAL MAC under TAG_CONDITIONAL_RECIPIENT_BINDING_V3 covering the variant tag + full SCALE-length-prefixed payload — that second MAC is implemented in Phase E (envelope), not here.",
+      "stanza_index": 3,
+      "binding_tag": "0xdf3f00fda919fec58008c127c1822fdcec3d5612993e0177326e872d2d553522",
+      "binding_tag_symbol": "TAG_CONDITIONAL_RECIPIENT_BINDING_V3",
+      "stanza_mac": "0xac88caa7fdb73c8053ede5b14e0e0d6162d9ea61cfcce0355cb0417b09937287"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "status": "deferred",
+  "reason": "VENDOR_CONFIRMATION_DCIPHER_BLS_VARIANT is unresolved: ciphersuite identifier, committee pubkey length, signature length, threshold-not-met fixture, and tombstoned-entry fixture are pending Randamu confirmation."
+}

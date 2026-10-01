@@ -1,0 +1,9 @@
+# G4 Phase 1 — dev-local + build artifacts (NEVER commit)
+dev-local/certs/
+server/dist/
+server/node_modules/
+build-artifacts/
+build*.log
+# v3-crypto-dist/ is build-staging populated by build-railway.sh from
+# v3-crypto/dist/. Never committed (the source dist is the source of truth).
+v3-crypto-dist/

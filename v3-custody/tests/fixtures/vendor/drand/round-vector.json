@@ -1,0 +1,10 @@
+{
+  "status": "fixture",
+  "source": "v3-crypto/test/fixtures/sigma-g3.golden.json",
+  "drandClientVersion": "1.4.2",
+  "chainHash": "cealis-drand-fixture-chain",
+  "targetRound": "123456789",
+  "publicKey": "0xa0995e784aae091307855425e9585c59e92f51346ddb54c0fdcf2c709f1f43659a19d46dbf3c4c5b35330563d88b1310",
+  "signature": "0xb2c94dc07935b9571e77ef7deb7f25291f4421eaedb2b4d2288d8b9dd22b7be534a6d9cc6da77dd8d95a29a7a748cfca0a2ee5be4a03582a7d6c3b8e0b4fc7c5c31d0bc5c70861ce4a4ad5ac8875caaf0449bb6d123ccb435306055afbd4a35c",
+  "expectedShare": "0x000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+}

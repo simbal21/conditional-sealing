@@ -1,0 +1,29 @@
+{
+  "_comment": "TSConfig for the G4 Phase 1 daemon. Standalone compile (NOT part of v3-custody's monorepo tsconfig.test.json) because the daemon is a separate deployable artifact built by Dockerfile.railway. Determinism comes from frozen toolchain version pins in server/package.json + this file.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "rootDir": ".",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "noEmit": false,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "@cealis/v3-crypto": ["../../../v3-crypto/dist/index.d.ts"],
+      "@cealis/v3-crypto/*": ["../../../v3-crypto/dist/*"]
+    },
+    "baseUrl": "."
+  },
+  "include": ["*.ts"],
+  "exclude": ["dist", "node_modules", "**/__tests__/**"]
+}

@@ -1,0 +1,7 @@
+{
+  "authorizationId": "0x01132537495b6d7f91a3b5c7d9ebfd0f21334557697b8d9fb1c3d5e7f90b1d2f",
+  "assignedTeeId": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "assignmentBlock": "12340",
+  "assignedTeePubkey": "0xb5bc68add8ea088e8291f2652c89617bf89f05f7de74415670141f8679a7183b1ae8aca4d31bc52adfa9cae0f5b32a7a",
+  "sourceGovernanceDigest": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+}

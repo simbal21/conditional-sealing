@@ -1,0 +1,68 @@
+# HISTORICAL — target hosting project no longer exists; see HISTORICAL.md
+# Railway service config for the G4 Phase 1 daemon (DRAFT, awaiting meta-partner verdict).
+#
+# Service: cealis-g4-phase1
+# Mode: TCP passthrough (mTLS terminates INSIDE the container, not at Railway's edge —
+# matches the future Nitro Enclave deploy where TLS termination IS inside the enclave).
+# This means Railway proxies raw TCP to the daemon's HTTPS port; the daemon does TLS
+# handshake + mTLS client cert verification itself.
+
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "v3-custody/g4-phase1/Dockerfile"
+buildCommand = "bash v3-custody/g4-phase1/build.sh"
+
+[deploy]
+# Number of replicas. Start with 1 (deterministic per-request signing; no shared state).
+# Scale horizontally only after we verify request-routing doesn't break mTLS pin.
+numReplicas = 1
+
+# Restart on crash. The daemon is fail-fast on bad env (mustEnv throws); restart loop
+# surfaces the failure quickly.
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 5
+
+# Health gate — Railway considers the service "ready" only after /health returns 200.
+healthcheckPath = "/health"
+healthcheckTimeout = 5
+
+# Region — eu-west matches Cealis legal scope (Germany pilot, GDPR data residency).
+region = "eu-west1"
+
+# Resource sizing — small. Ed25519 sign is ~ms, daemon is stateless. 256MB / 0.5 vCPU is
+# more than enough for early pilot loads. Adjust after observability lands.
+[deploy.resources]
+memoryMB = 256
+cpuCores = 0.5
+
+# Sleep-mode disabled — this is enforcement infrastructure; cold-start latency on a
+# revealAuthorized event is a real-time SLA hit.
+sleepApplication = false
+
+[networking]
+# TCP passthrough (not HTTPS): Railway's edge proxies raw TCP to the daemon. The daemon
+# itself terminates TLS + verifies mTLS client cert.
+protocol = "tcp"
+internalPort = 9444
+publicPort = 9444
+
+# ===== Required env vars (DOCS — actual values set via `railway vars set`) =====
+#
+# G4_PHASE1_PORT           — overridden by Railway's PORT injection at runtime
+# G4_PHASE1_TLS_KEY        — path to TLS server private key (mounted via Railway secret
+#                            file, e.g., /etc/g4/tls-key.pem)
+# G4_PHASE1_TLS_CERT       — path to TLS server cert
+# G4_PHASE1_TLS_CA         — path to client CA (the orchestrator's CA — verifies the
+#                            orchestrator's client cert during mTLS handshake)
+# G4_PHASE1_SIGNING_KEY    — path to Ed25519 PEM (the daemon's authority key; pubkey is
+#                            registered on G4AuthorityRegistry)
+# G4_PHASE1_REASON_KEY_HEX — 32-byte hex (the AES-GCM key for encrypted refusal blobs)
+# G4_PHASE1_CLIENT_FINGERPRINT256 — SHA-256 fingerprint of the orchestrator's client
+#                            cert (mTLS-pin)
+# G4_PHASE1_RPC_URL        — Base Sepolia RPC (for refusal-handler chain writes IF the
+#                            daemon writes directly; if relay-to-orchestrator model is
+#                            chosen instead, this env var is unused)
+# G4_PHASE1_CHAIN_ID       — 84532 (Base Sepolia) — parameterized for mainnet later
+#
+# Secrets MUST be provisioned via `railway vars set <KEY>=<VALUE>` not committed to repo.
+# TLS certs MUST be provisioned via Railway's secret-file feature (encrypted at rest).

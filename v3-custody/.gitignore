@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+.coverage
+*.log
+*.tsbuildinfo
+.DS_Store
+
+# G4 Phase 1 reproducible-build outputs (regenerated on demand)
+g4-phase1/build-artifacts/
+g4-phase1/build-hash.txt

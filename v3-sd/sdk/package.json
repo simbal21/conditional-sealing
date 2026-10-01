@@ -1,0 +1,52 @@
+{
+  "name": "@cealis/v3-sd-verify",
+  "version": "0.1.0",
+  "description": "Cealis V3 Selective Disclosure partner verification SDK per docs/specs/sd-spec-v2.md (S2-7) §9. INDEPENDENT package — verifies SD bundles, claim proofs, cleartext openings without calling Cealis-controlled endpoints. Revocation reads via partner-controlled RPC; PLONK proofs verified against locally-held vkey. Zero workspace deps on Cealis runtime packages.",
+  "private": false,
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint . --max-warnings 0",
+    "clean": "rm -rf dist coverage .coverage",
+    "wording-lint": "node ../scripts/wording-lint.mjs README.md src"
+  },
+  "dependencies": {
+    "@noble/hashes": "1.8.0",
+    "@noble/curves": "1.9.7",
+    "circomlibjs": "0.1.7",
+    "snarkjs": "0.7.4",
+    "viem": "2.21.55",
+    "canonicalize": "2.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.18",
+    "@typescript-eslint/eslint-plugin": "8.59.2",
+    "@typescript-eslint/parser": "8.59.2",
+    "@vitest/coverage-v8": "3.2.4",
+    "eslint": "9.17.0",
+    "prettier": "3.4.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}

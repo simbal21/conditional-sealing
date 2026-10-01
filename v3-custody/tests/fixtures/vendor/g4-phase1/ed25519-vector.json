@@ -1,0 +1,5 @@
+{
+  "phase": 1,
+  "commit_version": "0x0302",
+  "note": "Phase D fixture placeholder; runtime historical vector test generates deterministic key material in-process."
+}

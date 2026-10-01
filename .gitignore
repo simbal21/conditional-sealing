@@ -1,0 +1,26 @@
+node_modules/
+dist/
+build/
+coverage/
+.coverage/
+*.tsbuildinfo
+
+# env
+.env
+.env.*
+!.env.v3.example
+
+# foundry
+contracts/cache/
+contracts/out/
+contracts/broadcast/
+contracts/.gas-snapshot
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# os
+.DS_Store
+Thumbs.db

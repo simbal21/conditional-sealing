@@ -1,0 +1,6 @@
+{
+  "version": "v3",
+  "stage": "stage-3-build",
+  "commit_version": "0x0302",
+  "spec_source": "docs/specs/cryptography-spec.md"
+}

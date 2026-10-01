@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+*.log
+*.tsbuildinfo
+.git/
+.DS_Store
+build-artifacts/
+build-hash.txt
+__tests__/

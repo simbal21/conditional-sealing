@@ -1,0 +1,24 @@
+{
+  "_meta": {
+    "comment": "// LOCKED — Phase D seed; do not regenerate without human review.",
+    "spec": "docs/specs/cryptography-spec.md §6.3.4 negative vectors + IB-2 checklist",
+    "phase": "D"
+  },
+  "cases": [
+    { "profile": "FIXED_ONLY", "case": "duplicate_x", "expected_error": "ERR_SHAMIR_SHARE_INDEX_INVALID" },
+    { "profile": "FIXED_ONLY", "case": "x_zero", "expected_error": "ERR_SHAMIR_SHARE_INDEX_INVALID" },
+    { "profile": "FIXED_ONLY", "case": "below_threshold", "expected_error": "ERR_SHAMIR_THRESHOLD_NOT_MET" },
+    { "profile": "FIXED_ONLY", "case": "cross_domain_substitution", "expected_error": "ERR_SHARE_RECORD_DOMAIN_ROLE_MISMATCH" },
+    { "profile": "FIXED_ONLY", "case": "missing_mandatory_top_level", "expected_error": "ERR_TOP_LEVEL_MANDATORY_BRANCH_ABSENT" },
+    { "profile": "RECIPIENT_1_OF_1", "case": "duplicate_x", "expected_error": "ERR_SHAMIR_SHARE_INDEX_INVALID" },
+    { "profile": "RECIPIENT_1_OF_1", "case": "x_zero", "expected_error": "ERR_SHAMIR_SHARE_INDEX_INVALID" },
+    { "profile": "RECIPIENT_1_OF_1", "case": "below_threshold", "expected_error": "ERR_SHAMIR_THRESHOLD_NOT_MET" },
+    { "profile": "RECIPIENT_1_OF_1", "case": "cross_domain_substitution", "expected_error": "ERR_SHARE_RECORD_DOMAIN_ROLE_MISMATCH" },
+    { "profile": "RECIPIENT_1_OF_1", "case": "missing_mandatory_top_level", "expected_error": "ERR_TOP_LEVEL_MANDATORY_BRANCH_ABSENT" },
+    { "profile": "RECIPIENT_K_OF_N", "case": "duplicate_x", "expected_error": "ERR_SHAMIR_SHARE_INDEX_INVALID", "n_conditional": 3, "k_conditional": 2 },
+    { "profile": "RECIPIENT_K_OF_N", "case": "x_zero", "expected_error": "ERR_SHAMIR_SHARE_INDEX_INVALID", "n_conditional": 3, "k_conditional": 2 },
+    { "profile": "RECIPIENT_K_OF_N", "case": "below_threshold", "expected_error": "ERR_SHAMIR_THRESHOLD_NOT_MET", "n_conditional": 3, "k_conditional": 2 },
+    { "profile": "RECIPIENT_K_OF_N", "case": "cross_domain_substitution", "expected_error": "ERR_SHARE_RECORD_DOMAIN_ROLE_MISMATCH", "n_conditional": 3, "k_conditional": 2 },
+    { "profile": "RECIPIENT_K_OF_N", "case": "missing_mandatory_top_level", "expected_error": "ERR_TOP_LEVEL_MANDATORY_BRANCH_ABSENT", "n_conditional": 3, "k_conditional": 2 }
+  ]
+}

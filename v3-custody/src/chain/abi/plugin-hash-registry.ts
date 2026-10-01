@@ -1,0 +1,36 @@
+// Trimmed ABI for `PluginHashRegistry`. Source: M2 ABI JSON.
+//
+// Combiner uses `getPluginAt(plugin_version_digest, authorizationBlock)` —
+// 4-param signature with NORMATIVE at-block read per
+// SPEC-COMPLIANCE-GUARD-M3 §7.
+
+export const pluginHashRegistryAbi = [
+  {
+    type: "function",
+    name: "getEntryAt",
+    inputs: [
+      { name: "id", type: "bytes32", internalType: "bytes32" },
+      { name: "blockNumber", type: "uint64", internalType: "uint64" },
+    ],
+    outputs: [{ name: "encodedEntry", type: "bytes", internalType: "bytes" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "deprecationFlag",
+    inputs: [{ name: "id", type: "bytes32", internalType: "bytes32" }],
+    outputs: [
+      {
+        name: "",
+        type: "tuple",
+        components: [
+          { name: "deprecated", type: "bool", internalType: "bool" },
+          { name: "reasonCode", type: "uint8", internalType: "uint8" },
+          { name: "disclosureCid", type: "bytes32", internalType: "bytes32" },
+          { name: "disclosureCommitHash", type: "bytes32", internalType: "bytes32" },
+        ],
+      },
+    ],
+    stateMutability: "view",
+  },
+] as const;

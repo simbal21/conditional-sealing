@@ -1,0 +1,47 @@
+{
+  "protocol": "cealis-v3-lit-acc",
+  "version": 1,
+  "chain": {
+    "chainId": 84532,
+    "family": "base"
+  },
+  "contracts": {
+    "attestationGate": "0x2222222222222222222222222222222222222222",
+    "conditionEngine": "0x1111111111111111111111111111111111111111"
+  },
+  "reveal": {
+    "authorizationId": "0x01132537495b6d7f91a3b5c7d9ebfd0f21334557697b8d9fb1c3d5e7f90b1d2f",
+    "h_commit": "0x21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa",
+    "revealAuthorizedBlockHash": "0xa0a3a6a9acafb2b5b8bbbec1c4c7cacdd0d3d6d9dcdfe2e5e8ebeef1f4f7fafd",
+    "finalized": true
+  },
+  "predicates": [
+    {
+      "kind": "evm-call",
+      "contractAddress": "0x2222222222222222222222222222222222222222",
+      "functionSignature": "canGatesSign(bytes32)",
+      "args": [
+        "0x01132537495b6d7f91a3b5c7d9ebfd0f21334557697b8d9fb1c3d5e7f90b1d2f"
+      ],
+      "returnValueTest": {
+        "comparator": "=",
+        "value": true
+      }
+    },
+    {
+      "kind": "current-state",
+      "contractAddress": "0x1111111111111111111111111111111111111111",
+      "functionSignature": "RevealAuthorized(bytes32,bytes32,bytes32,uint64,uint64,uint32,bytes32)",
+      "args": [
+        "0x01132537495b6d7f91a3b5c7d9ebfd0f21334557697b8d9fb1c3d5e7f90b1d2f",
+        "0x21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa"
+      ],
+      "blockHash": "0xa0a3a6a9acafb2b5b8bbbec1c4c7cacdd0d3d6d9dcdfe2e5e8ebeef1f4f7fafd"
+    },
+    {
+      "kind": "current-shred-state",
+      "h_commit": "0x21282f363d444b525960676e757c838a91989fa6adb4bbc2c9d0d7dee5ecf3fa",
+      "mustBeSignable": true
+    }
+  ]
+}

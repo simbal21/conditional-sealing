@@ -1,0 +1,24 @@
+{
+  "status": "fixture",
+  "drandClientVersion": "1.4.2",
+  "chainHash": "cealis-drand-fixture-chain",
+  "periodSeconds": 30,
+  "genesisTime": 1595431050,
+  "publicKey": "0xa0995e784aae091307855425e9585c59e92f51346ddb54c0fdcf2c709f1f43659a19d46dbf3c4c5b35330563d88b1310",
+  "tlockCiphersuiteId": "CEALIS_DRAND_TLOCK_FIXTURE_V1",
+  "committeeKeyRef": "league-of-entropy-mainnet-fixture",
+  "governanceTimelockRef": "S2-2 GateRecipientPubkeyRegistry long-lived drand committee timelock",
+  "endpoints": [
+    {
+      "id": "league-primary-fixture",
+      "url": "https://api.drand.sh",
+      "certificateSha256": "sha256/1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "id": "league-secondary-fixture",
+      "url": "https://api2.drand.sh",
+      "certificateSha256": "sha256/2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ],
+  "drandLongLivedCommitteeKemCaveat": "drand has no per-commit recipient primitive; this long-lived committee KEM can expose at most TopShare(G3), not the DEK without Lit and G4 mandatory branches."
+}

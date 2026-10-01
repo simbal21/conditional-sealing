@@ -1,0 +1,35 @@
+{
+  "$comment": "Phase A pinned Hermez ptau per S2-7 §7.1 + PHASE-PLAN §A item A12. DEV-MODE ONLY — partner-pilot deployments REQUIRE the M7 production ceremony.",
+  "selected_ptau_default": "powersOfTau28_hez_final_15.ptau",
+  "downloads": {
+    "powersOfTau28_hez_final_15.ptau": {
+      "url": "https://storage.googleapis.com/zkevm/ptau/powersOfTau28_hez_final_15.ptau",
+      "sha256": "TBD-M7-CEREMONY-VERIFIES",
+      "ceiling_constraints": 32768,
+      "comment": "Covers circuits ≤ 2^15 constraints (equality + non_equality fit). Range + set_membership may NOT fit — Phase C may re-pin to _17 per-circuit."
+    },
+    "powersOfTau28_hez_final_17.ptau": {
+      "url": "https://storage.googleapis.com/zkevm/ptau/powersOfTau28_hez_final_17.ptau",
+      "sha256": "TBD-M7-CEREMONY-VERIFIES",
+      "ceiling_constraints": 131072,
+      "comment": "Covers all 4 leaf circuits + aggregate-8-leaves expected budget. Default for partner-pilot if Phase C constraint counts exceed _15 ceiling."
+    }
+  },
+  "phase_c_actual_consumed": {
+    "$comment": "Phase C ran in sandbox-no-network (getaddrinfo ENOTFOUND storage.googleapis.com); pinned Hermez ptau was unreachable at build time. Phase C generated a local-dev fallback ptau15 for deterministic Phase C-E execution. This is DEV-MODE ONLY — partner traffic MUST consume the M7-ceremony-verified pinned ptau, not this local-dev artifact.",
+    "source": "local-dev-generated",
+    "file": "local-dev-powersOfTau15_final.ptau",
+    "sha256": "970524953a27fc7cc3b5df4f0375bc3b42ecd9c6abfa7ffc1dc4317ce8ff5c4b",
+    "divergence_reason": "Sandbox has no outbound network access; pinned Hermez ptau (powersOfTau28_hez_final_15.ptau) unreachable. Phase C generated a deterministic local-dev fallback to unblock Phase C-E execution.",
+    "production_fetch_plan": "M7 production ceremony fetches the pinned Hermez ptau from storage.googleapis.com (or the canonical snarkjs mirror), verifies sha256 against the canonical value, then re-runs the circuit setup pipeline with the verified ptau. The result replaces the Phase C local-dev zkey + verification_key artifacts before partner-pilot.",
+    "warning": "DEV-MODE ONLY — not for partner traffic"
+  },
+  "phase_c_runtime_pin": {
+    "$comment": "Phase C `pnpm run setup:circuits` MUST verify the sha256 of the downloaded ptau before consuming. The M7 ceremony fills in the verified Hermez sha256 fields above (currently TBD-M7-CEREMONY-VERIFIES). The phase_c_actual_consumed block above captures the actual local-dev artifact Phase C consumed in sandbox.",
+    "verifier_command_template": "snarkjs powersoftau verify <ptau_path>"
+  },
+  "ceremony_dev_mode_warning": "This pinned ptau set is DEV-MODE ONLY. Partner-pilot deployments require the M7 production ceremony per S2-7 §7.1 (lines 704-716). Stage 3 must pin the specific Powers-of-Tau transcript, contribution hash chain, proving library, verifier generator, and ceremony verification command in S2-3/S2-6 BEFORE shipping to a partner.",
+  "deferred_to": "M7",
+  "phase_a_lock_date": "2026-05-13",
+  "phase_e_resolution_date": "2026-05-13"
+}

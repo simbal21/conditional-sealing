@@ -1,0 +1,12 @@
+{
+  "status": "PLACEHOLDER_M6_AWAITING_PRODUCTION_REGEN",
+  "production_note": "These vectors are Phase E fixture placeholders with structurally-correct JSON shape but cryptographically-meaningless field values (digests, salts, commitments, proofs, roots). Partner SDK consumers MUST NOT validate their implementation against these values. Real reference vectors will be regenerated from the live @cealis/v3-sd code paths at M7/M8 and the placeholder marker dropped.",
+  "category": "04-hkdf-master-salt",
+  "vectors": [
+    {
+      "synthetic_dek": "0x0404040404040404040404040404040404040404040404040404040404040404",
+      "sd_salt_context_digest": "0x0401040104010401040104010401040104010401040104010401040104010401",
+      "sd_master_salt": "0x0402040204020402040204020402040204020402040204020402040204020402"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+# G4 Phase 1 daemon — Railway-targeted runtime (v0.1, pragmatic).
+#
+# Build model: pre-compile via pnpm in monorepo (see build-railway.sh), COPY the dist
+# bytes into a minimal Alpine runtime, run with node. This is the SHIP-IT-TODAY path.
+#
+# What's deliberately deferred to v0.2:
+#   - Multi-stage build with frozen tsc/esbuild for reproducible hashing inside Docker.
+#     Current dist is built via the monorepo's pinned tsc (in pnpm-lock.yaml). The
+#     on-chain G4AuthorityRegistry.binaryHashOrMeasurement entry covers the LOCAL build
+#     output, not the Docker bundling step. Auditor reproducibility = "clone repo,
+#     `bash v3-custody/g4-phase1/build-railway.sh`, SHA-256 server/dist/main.js"
+#     — NOT "rebuild the Docker image from scratch."
+#   - Distroless final image (gcr.io/distroless/nodejs20-debian12:nonroot). Current
+#     uses node:20-alpine for `node -e` HEALTHCHECK + easier debugging during pilot.
+#     Distroless flip is mechanical once /health is verified-stable.
+#   - SOURCE_DATE_EPOCH=0 across the npm/Docker layers. Determinism work pairs with the
+#     v0.2 multi-stage flip.
+#
+# What's HERE:
+#   - Bind 0.0.0.0:$PORT (Railway PORT injection; main.ts reads it)
+#   - HTTPS terminates inside container (mTLS verifies orchestrator's client cert)
+#   - Non-root runtime user
+#   - Healthcheck via curl
+#
+# REQUIRED ENV (set via railway vars or docker -e):
+#   PORT (Railway-injected) OR G4_PHASE1_PORT
+#   G4_PHASE1_BIND_HOST       = "0.0.0.0" (Railway needs public bind)
+#   G4_PHASE1_TLS_KEY         = /etc/g4/server.key
+#   G4_PHASE1_TLS_CERT        = /etc/g4/server.crt
+#   G4_PHASE1_TLS_CA          = /etc/g4/ca.crt
+#   G4_PHASE1_SIGNING_KEY     = /etc/g4/signing.key   (Ed25519 PEM)
+#   G4_PHASE1_REASON_KEY_HEX  = 32-byte hex (AES-GCM key for encrypted refusal blobs)
+#   G4_PHASE1_CLIENT_FINGERPRINT256 = SHA-256 fingerprint of orchestrator's client cert
+#   G4_PHASE1_REFUSAL_MODE    = "relay-claim-only" (the only mode v0.1 supports)
+#
+# Secrets MUST be provisioned via Railway's encrypted secret-file feature, NEVER baked
+# into the image. The Dockerfile creates the /etc/g4/ mount point; Railway mounts the
+# actual files at deploy time.
+
+FROM node:20-alpine
+
+# Boot-time deps: curl for HEALTHCHECK, bash for entrypoint scripts, tini for signal
+# forwarding so Railway SIGTERM gracefully stops the daemon.
+RUN apk add --no-cache curl bash tini
+
+WORKDIR /app
+
+# Copy the pre-built daemon dist (built by build-railway.sh in the monorepo)
+COPY server/dist/ /app/dist/
+COPY server/package.json /app/package.json
+
+# Workspace v3-crypto compiled dist — staged into ./v3-crypto-dist/ by build-railway.sh
+# so it's available inside the Docker build context. Mounted at /opt/ inside the image
+# so the daemon's resolver can find it.
+COPY v3-crypto-dist/ /opt/v3-crypto-dist/
+
+# Symlink @cealis/v3-crypto into node_modules so the daemon's ESM import resolves at
+# runtime. (We don't install via npm because server/package.json has empty deps by
+# design — the daemon is hermetic except for v3-crypto which we ship explicitly.)
+RUN mkdir -p /app/node_modules/@cealis && \
+    ln -s /opt/v3-crypto-dist /app/node_modules/@cealis/v3-crypto
+
+# Create the /etc/g4/ secrets mount point (Railway mounts certs/keys here at deploy)
+RUN mkdir -p /etc/g4 && chown -R node:node /etc/g4
+
+# Non-root user
+USER node
+
+# Healthcheck — curl /health (no client cert; server allows /health without mTLS per
+# channel-mtls.ts exemption). `--insecure` because the server cert is self-signed in
+# v0.1; pilot deploy will use Railway-issued cert or a public-trust path.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD curl --silent --max-time 4 --insecure --output /dev/null --write-out "%{http_code}" \
+    "https://127.0.0.1:${G4_PHASE1_PORT:-${PORT:-9444}}/health" \
+    | grep -q "200" || exit 1
+
+# Entry — tini reaps zombies + forwards SIGTERM to the daemon. --experimental-vm-modules
+# left off because our tsconfig emits NodeNext which doesn't need it at runtime.
+ENTRYPOINT ["/sbin/tini", "--", "node", "/app/dist/main.js"]

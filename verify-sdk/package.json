@@ -1,0 +1,49 @@
+{
+  "name": "@cealis/verify-sdk",
+  "version": "0.1.0",
+  "description": "Cealis offline verification SDK per docs/specs/ingestion-delivery-api-spec.md §4.7 + §9.1 + App. B. Three primary functions: verifyArtifactBundle, verifySdOutput, verifyWebhook. Zero Cealis-network dependency — partner-supplied RPC for chain reads only. Independence is a normative security property.",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint . --max-warnings 0",
+    "clean": "rm -rf dist coverage .coverage"
+  },
+  "dependencies": {
+    "@cealis/v3-crypto": "workspace:*",
+    "@noble/hashes": "1.8.0",
+    "canonicalize": "2.0.0",
+    "viem": "2.21.55"
+  },
+  "devDependencies": {
+    "@types/node": "22.19.18",
+    "@typescript-eslint/eslint-plugin": "8.59.2",
+    "@typescript-eslint/parser": "8.59.2",
+    "@vitest/coverage-v8": "3.2.4",
+    "eslint": "9.17.0",
+    "prettier": "3.4.2",
+    "typescript": "5.9.3",
+    "vitest": "3.2.4"
+  }
+}

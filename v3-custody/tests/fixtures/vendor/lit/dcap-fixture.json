@@ -1,0 +1,20 @@
+{
+  "quoteId": "lit-quote-fixture-001",
+  "quoteVersion": "lit-chipotle-dcap-fixture-v1",
+  "vendor": {
+    "vendorRoot": "Intel SGX Root CA",
+    "isolationTechnology": "Intel SGX",
+    "productName": "Lit Chipotle SGX serving TEE",
+    "measurementFormat": "DCAP"
+  },
+  "assignedTeeId": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "measurementDigest": "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "userData": "0xa5821b5beb128e7aeb52c04b880d305ebef29e2ab0079d0a4d1d82ba8c6b43f60000000000000000000000000000000000000000000000000000000000000000",
+  "issuedAtMs": 1800000000000,
+  "expiresAtMs": 1800000300000,
+  "tcbStatus": "OK",
+  "signatureChainValid": true,
+  "collateralFresh": true,
+  "enclaveMeasurementMatches": true,
+  "bindingStatementDigests": []
+}
